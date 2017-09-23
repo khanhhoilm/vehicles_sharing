@@ -3,4 +3,15 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="background_color">#2980b9</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="white_greyish">#EEEEEE</color>
+    <color name="button_selectorcolor">#9E9E9E</color>
+    <color name="button_google">#e74c3c</color>
+    <color name="colortextprofile">#7f8c8d</color>
+    <color name="backgroud_bottom_profile">#ecf0f1</color>
+    <color name="yellow">#f1c40f</color>
+    <color name="button_edit_profile">#3498db</color>
+    <color name="color_line_field">#34495e</color>
 </resources>
