@@ -1,4 +1,4 @@
-package vehiclessharing.vehiclessharing.fragment;
+package vehiclessharing.vehiclessharing.controller.fragment;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -7,7 +7,6 @@ import android.content.res.XmlResourceParser;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,20 +17,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 
 import retrofit2.Callback;
 
-import vehiclessharing.vehiclessharing.R;
+import co.vehiclessharing.R;
 import vehiclessharing.vehiclessharing.constant.Utils;
-import vehiclessharing.vehiclessharing.controller.RestManager;
-import vehiclessharing.vehiclessharing.custom.CustomToast;
+import vehiclessharing.vehiclessharing.api.RestManager;
+import vehiclessharing.vehiclessharing.viewscustom.CustomToast;
 import vehiclessharing.vehiclessharing.database.DatabaseHelper;
 import vehiclessharing.vehiclessharing.model.SignUpResult;
 import vehiclessharing.vehiclessharing.model.Validation;

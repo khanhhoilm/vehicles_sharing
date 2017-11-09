@@ -1,4 +1,4 @@
-package vehiclessharing.vehiclessharing.activity;
+package vehiclessharing.vehiclessharing.controller.activity;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -25,8 +25,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.facebook.FacebookSdk;
-
 //import com.google.firebase.auth.FirebaseAuth;
 
 import com.facebook.appevents.AppEventsLogger;
@@ -48,18 +46,19 @@ import java.util.HashMap;
 import java.util.List;
 
 import io.realm.Realm;
-import vehiclessharing.vehiclessharing.R;
+import co.vehiclessharing.R;
 import vehiclessharing.vehiclessharing.asynctask.CustomMarkerAsync;
 import vehiclessharing.vehiclessharing.database.DatabaseHelper;
 //import vehiclessharing.vehiclessharing.database.RealmDatabase;
-import vehiclessharing.vehiclessharing.fragment.AddRequestFragment;
+import vehiclessharing.vehiclessharing.controller.fragment.AddRequestFragment;
 import vehiclessharing.vehiclessharing.model.ActiveUser;
 import vehiclessharing.vehiclessharing.model.CheckerGPS;
-import vehiclessharing.vehiclessharing.model.RequestInfo;
 import vehiclessharing.vehiclessharing.model.UserInfo;
 //import vehiclessharing.vehiclessharing.model.UserOnDevice;
-import vehiclessharing.vehiclessharing.session.SessionManager;
+import vehiclessharing.vehiclessharing.authentication.SessionManager;
 import vehiclessharing.vehiclessharing.utils.DrawRoute;
+import vehiclessharing.vehiclessharing.utils.Helper;
+import vehiclessharing.vehiclessharing.utils.Logout;
 import vehiclessharing.vehiclessharing.utils.PlaceHelper;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
@@ -89,9 +88,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private int userId;
     private String sessionId = "";
     private boolean changeLocation = false;
-    private LatLng mySource,myDes;
-
+    private LatLng mySource, myDes;
     private List<ActiveUser> listActiveUser;
+    public static List<Polyline> polylineList;
+    public static HashMap<Marker, ActiveUser> userHashMap;
 
     //    private ValueEventListener requestNeederListener;
 //    private HashMap<String, Marker> markerHashMap = new HashMap<>();//Hashmap store all the marker inside map
@@ -167,7 +167,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         btnRestartRequest = (FloatingActionButton) findViewById(R.id.btnRestartRequest);
         checkOnScreen = 0;
         markerHashMap = new HashMap<>();
-        listActiveUser=new ArrayList<>();
+        userHashMap = new HashMap<>();
+        listActiveUser = new ArrayList<>();
+        polylineList = new ArrayList<>();
 
     }
 
@@ -175,13 +177,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onStart() {
         super.onStart();
         // updateUIHeader(loginWith);//Update information user into header layout
-        Intent intent = getIntent();
+        /*Intent intent = getIntent();
         if (intent != null) {
             Log.d("notification_aaaa", String.valueOf(intent.getStringExtra("notification")));
             Log.d("notification_aaaa", String.valueOf(intent.getStringExtra("body")));
 
         }
-       /* if (checkerGPS.checkLocationPermission() && !TrackGPSService.isRunning)
+*/       /* if (checkerGPS.checkLocationPermission() && !TrackGPSService.isRunning)
             startService(new Intent(this, TrackGPSService.class));//Enable tracking GPS*/
     }
 
@@ -193,21 +195,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // Handle the camera action
 //            fragmentManager.beginTransaction().replace(R.id.frameContainer, new Home_Fragment(), Utils.Home_Fragment).commit();
         } else if (id == R.id.nav_profile) {
-            //use activity
-            //  startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-            //  fragmentManager.beginTransaction().replace(R.id.frameContainer, new Profile_Fragment(), Utils.Profile_Fragment).commit();
+            Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_history) {
-
+            Intent historyIntent = new Intent(MainActivity.this, HistoryActivity.class);
+            startActivity(historyIntent);
             //   startActivity(new Intent(MainActivity.this, HistoryActivity.class));
         } else if (id == R.id.nav_about) {
             // fab.callOnClick();
         } else if (id == R.id.nav_logout) {
-            //    logout();
+               logout();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void logout() {
+        Logout.actionLogout(this,getSupportFragmentManager());
     }
 
     @Override
@@ -239,18 +245,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         btnCancelRequest.setVisibility(View.GONE);
         btnFindPeople.setVisibility(View.VISIBLE);
         btnFindVehicles.setVisibility(View.VISIBLE);
-        if(listActiveUser.size()>0)
-        {
-            for (ActiveUser user:listActiveUser) {
-                if (markerHashMap.containsKey(user))
-                {
-                    Marker markerRm=markerHashMap.get(user);
+        if (listActiveUser.size() > 0) {
+            for (ActiveUser user : listActiveUser) {
+                if (markerHashMap.containsKey(user)) {
+                    Marker markerRm = markerHashMap.get(user);
                     markerRm.remove();
-            //        markerHashMap.remove(user);
+                    //        markerHashMap.remove(user);
                 }
             }
             markerHashMap.clear();
         }
+        mGoogleMap.clear();
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        // locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
+        Location myLocation = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+        // if(previousLocation)
+        getMyLocation(myLocation);
+
+
          /*
         When you add a marker on Map, you can store it into HashMap like this:
 
@@ -327,10 +339,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     //Polyline polyline=mGoogleMap.get
                     View v = null;
                     // User user = new User();
-                    String who = marker.getTitle();
-                    if (!who.equals("You're here") && !who.equals("Your destination")) {
+                    String who = (String) marker.getTag();
+                    if (!who.equals("here") && !who.equals("des")) {
                         try {
                             v = displayInfoMarkerClick(marker);
+
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -346,38 +359,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
                 public void onInfoWindowClick(Marker marker) {
-                    AlertDialog.Builder builder;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        builder = new AlertDialog.Builder(MainActivity.this, android.R.style.Theme_Material_Dialog_Alert);
-                    } else {
-                        builder = new AlertDialog.Builder(MainActivity.this);
+                    String who = (String) marker.getTag();
+                    if (!who.equals("here") && !who.equals("des")) {
+
+                        AlertDialog.Builder builder;
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            builder = new AlertDialog.Builder(MainActivity.this, android.R.style.Theme_Material_Dialog_Alert);
+                        } else {
+                            builder = new AlertDialog.Builder(MainActivity.this);
+                        }
+                        builder.setTitle(getString(R.string.title_send_request))
+                                .setMessage(getString(R.string.confirm_send_request))
+                                .setPositiveButton(R.string.send_request, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // continue with delete
+                                    }
+                                })
+                                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // do nothing
+                                    }
+                                })
+                                .setIcon(R.drawable.ic_warning_red_600_24dp)
+                                .show();
                     }
-                    builder.setTitle("Send request")
-                            .setMessage("Are you sure you want to send this request?")
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // continue with delete
-                                }
-                            })
-                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // do nothing
-                                }
-                            })
-                            .setIcon(R.drawable.ic_warning_red_600_24dp)
-                            .show();
                 }
             });
         }
-        //makeCustomMaker(new LatLng(mGoogleMap.getMyLocation().getLatitude(),mGoogleMap.getMyLocation().getLongitude()),"I'm in here");
-        //[START]add new
-//        requestNeederRef = FirebaseDatabase.getInstance().getReference().child("requests_needer");
-//        requestNeederRef.addValueEventListener(requestNeederListener);
-//        requestNeederRef.addChildEventListener(requestChildListener);
-        //[END]add new
-//      makecustomMarkerAvatar(new LatLng(10.8719808, 106.790409),mUser.getUid(), "Nong Lam University");
-
-
     }
 
     private void getMyLocation(Location myLocation) {
@@ -395,7 +403,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         myMarker.remove();
 
                     }
-                    myMarker = mGoogleMap.addMarker(new MarkerOptions().position(myLatLng).title("Bạn đang ở đây"));
+                    myMarker = mGoogleMap.addMarker(new MarkerOptions().position(myLatLng).title(getString(R.string.here)));
+                    //  myMarker.setTag("me");
                     //  markerHashMap.put(userId,myMarker);
                     CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(myLatLng, 17);
                     mGoogleMap.animateCamera(cameraUpdate);
@@ -404,8 +413,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             if (previousLocation == null) {
                 previousLocation = myLocation;
-                myMarker = mGoogleMap.addMarker(new MarkerOptions().position(myLatLng).title("Bạn đang ở đây"));
+                myMarker = mGoogleMap.addMarker(new MarkerOptions().position(myLatLng).title(getString(R.string.here)));
                 // markerHashMap.put(userId,myMarker);
+                //myMarker.setTag(userInfo);
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(myLatLng, 17);
                 mGoogleMap.animateCamera(cameraUpdate);
             }
@@ -414,14 +424,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    private void makeCustomMarkerMyself(LatLng source, LatLng destination) {
+    private void makeCustomMarkerMyself(LatLng source, LatLng destination) throws IOException {
         mGoogleMap.clear();
         BitmapDescriptor bitmapSource = BitmapDescriptorFactory.fromResource(R.drawable.ic_person_pin_circle_red_700_36dp);
         BitmapDescriptor bitmapDestination = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_red_700_36dp);
-        Marker sourceMarker = mGoogleMap.addMarker(new MarkerOptions().position(source).title("You're here").icon(bitmapSource));
-        Marker destinationMarker = mGoogleMap.addMarker(new MarkerOptions().position(destination).title("Your destination").icon(bitmapDestination));
-        sourceMarker.setTag(userId);
-        destinationMarker.setTag(userId);
+        Marker sourceMarker = mGoogleMap.addMarker(new MarkerOptions().position(source).title("Chuyến đi của bạn bắt đầu tại: " + PlaceHelper.getInstance(this).getAddressByLatLng(source)).icon(bitmapSource));
+        Marker destinationMarker = mGoogleMap.addMarker(new MarkerOptions().position(destination).title("Chuyến đi kết thúc tại: " + PlaceHelper.getInstance(this).getAddressByLatLng(destination)).icon(bitmapDestination));
+        // userHashMap.put(sourceMarker,null);
+        sourceMarker.setTag("here");
+        destinationMarker.setTag("des");
     }
 
     @Override
@@ -438,7 +449,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      */
     private View displayInfoMarkerClick(Marker marker) throws IOException {
         View v = getLayoutInflater().inflate(R.layout.info_marker, null);
-        final TextView txtFullname, txtSourceLocation, txtDeslocation, txtTime;
+        final TextView txtFullname, txtSourceLocation, txtDeslocation, txtTime, txtTouch;
         final ImageView imgVehicleType;
 
         txtFullname = (TextView) v.findViewById(R.id.txtFullNameUser);
@@ -446,96 +457,90 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         txtDeslocation = (TextView) v.findViewById(R.id.txtDesLocationUser);
         txtTime = (TextView) v.findViewById(R.id.txtTimeUser);
         imgVehicleType = (ImageView) v.findViewById(R.id.imgVehicleTypeUser);
+        txtTouch = (TextView) v.findViewById(R.id.txtTouchSendRequest);
         //txtVehicleType.setVisibility(View.GONE);
         String time = "";
         int vehicleType;
-        LatLng souceLocation = null;
-        LatLng desLocation = null;
-        String idUser = "";
-        final String[] fullName = new String[1];
-        Boolean checkNullObject = true;
-       // if (checkOnScreen == 1) {
-            ActiveUser user= (ActiveUser) marker.getTag();
-            //user = UserInfomation.getInstance().getInfoUserById(graber.getUserId());
-            if (user != null) {
-             //   souceLocation = new LatLng(user.getRequestInfo().getSourceLocation().getLat(),user.getRequestInfo().getSourceLocation().getLng());
-               // desLocation = new LatLng(user.getRequestInfo().getDestLocation().getLat(),user.getRequestInfo().getDestLocation().getLng());
-                time = user.getRequestInfo().getTimeStart();
-                vehicleType=user.getRequestInfo().getVehicleType();
-                /*if (imgVehicleType.getVisibility() == View.INVISIBLE) {
-                    imgVehicleType.setVisibility(View.VISIBLE);
-                }// txtVehicleType.setText(graber.getVehicleType());
-                if (graber.getVehicleType().equals("Bike")) {
-                    imgVehicleType.setImageResource(R.drawable.ic_motorcycle_green_900_24dp);
-                }
-                checkNullObject = false;
-                idUser = graber.getUserId();*/
-                //replace mysource to test because source and des of active user is null
-                String sourceAddress = PlaceHelper.getInstance(this).getAddressByLatLng(mySource);
-                //LatLng des = new LatLng(desLocation.getLatidude(), desLocation.getLongtitude());
-                String destinationAddress = PlaceHelper.getInstance(this).getAddressByLatLng(mySource);
 
-                txtFullname.setText(user.getUserInfo().getName());
-                txtSourceLocation.setText(sourceAddress);
-                txtDeslocation.setText(destinationAddress);
-                txtTime.setText(time);
-                switch (user.getRequestInfo().getVehicleType()) {
-                    case 0:
-                        imgVehicleType.setImageResource(R.drawable.ic_directions_run_indigo_700_24dp);
-                        break;
-                    case 1:
-                        imgVehicleType.setImageResource(R.drawable.ic_directions_car_indigo_700_24dp);
-                        break;
-                    case 2:
-                        imgVehicleType.setImageResource(R.drawable.ic_motorcycle_indigo_a700_24dp);
-                        break;
-                }
-                if (DrawRoute.polylineNotCurUser != null) {
-                    DrawRoute.polylineNotCurUser.remove();
-                }
-                DrawRoute draw = new DrawRoute(this);
-                //code test
-                draw.drawroadBetween2Location(mySource, mySource, 1);
-                // code right
-                //draw.drawroadBetween2Location(mySource, desLocation, 1);
 
-                //Button btnSend= (Button) v.findViewById(R.id.btnSendRequest);
-                /*btnSend.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        Toast.makeText(MainActivity.this, "btnsend click", Toast.LENGTH_SHORT).show();
-                        return false;
-                    }
-                });*/
-          /*  } catch (IOException e) {
-                e.printStackTrace();
-            }*/
+        // if (checkOnScreen == 1) {
+        ActiveUser anotherUser = userHashMap.get(marker);
+
+        //(ActiveUser) marker.getTag();
+        //user = UserInfomation.getInstance().getInfoUserById(graber.getUserId());
+        if (anotherUser != null) {
+            //   souceLocation = new LatLng(user.getRequestInfo().getSourceLocation().getLat(),user.getRequestInfo().getSourceLocation().getLng());
+            // desLocation = new LatLng(user.getRequestInfo().getDestLocation().getLat(),user.getRequestInfo().getDestLocation().getLng());
+            time = anotherUser.getRequestInfo().getTimeStart();
+            vehicleType = anotherUser.getRequestInfo().getVehicleType();
+            LatLng sourceLocation=Helper.convertLatLngLocationToLatLng(anotherUser.getRequestInfo().getSourceLocation());
+            LatLng desLocation=Helper.convertLatLngLocationToLatLng(anotherUser.getRequestInfo().getDestLocation());
+            String sourceAddress = PlaceHelper.getInstance(this).getAddressByLatLng(sourceLocation);
+            //LatLng des = new LatLng(desLocation.getLatidude(), desLocation.getLongtitude());
+            String destinationAddress = PlaceHelper.getInstance(this).getAddressByLatLng(desLocation);
+            String name = anotherUser.getUserInfo().getName();
+            txtFullname.setText(name);
+            txtSourceLocation.setText(sourceAddress);
+            txtDeslocation.setText(destinationAddress);
+            txtTime.setText(time);
+            txtTouch.setText("Bạn muốn đi chung chuyến đi với " + name + "? Chạm vào hộp thoại này để có thể gửi yêu cầu muốn đi chung đến " + name);
+            switch (vehicleType) {
+                case 0:
+                    imgVehicleType.setImageResource(R.drawable.ic_directions_run_indigo_700_24dp);
+                    break;
+                case 1:
+                    imgVehicleType.setImageResource(R.drawable.ic_directions_car_indigo_700_24dp);
+                    break;
+                case 2:
+                    imgVehicleType.setImageResource(R.drawable.ic_motorcycle_indigo_a700_24dp);
+                    break;
+            }
+            if (DrawRoute.polylineNotCurUser != null) {
+                DrawRoute.polylineNotCurUser.remove();
+            }
+            BitmapDescriptor bitmapDestination = BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop_indigo_500_24dp);
+            Marker sourceMarker = mGoogleMap.addMarker(new MarkerOptions().position(desLocation).title("Chuyến đi của "+anotherUser.getUserInfo().getName()+" kết thúc tại đây " ).icon(bitmapDestination));
+
+            DrawRoute draw = new DrawRoute(this);
+            //code test
+            if (polylineList.size() > 1) {
+                polylineList.get(1).remove();
+            }
+
+            if(anotherUser.getRequestInfo().getVehicleType()==0) {
+                draw.drawroadBetween4Location(mySource, sourceLocation, desLocation, myDes, 1);
+            }else {
+                draw.drawroadBetween4Location(sourceLocation, mySource, myDes, desLocation, 1);
+            }
         }
-
-        //txtFullname.setText("hihihehehe");
         return v;
     }
-
 
     @Override
     public void addRequestSuccess(LatLng cur, LatLng des, String time, int type, List<ActiveUser> list) {
         Log.d("addRequestSuccess", "add request success");
 
-        listActiveUser=list;
-        changeLocation=true;
+        listActiveUser = list;
+        changeLocation = true;
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(cur, 17);
         mGoogleMap.animateCamera(cameraUpdate);
 
         DrawRoute drawRoute = new DrawRoute(this);
         drawRoute.setmSubject(0);
-        mySource=cur;
-        myDes=des;
+        mySource = cur;
+        myDes = des;
         drawRoute.drawroadBetween2Location(cur, des, 0);
-        makeCustomMarkerMyself(cur, des);
+        try {
+            makeCustomMarkerMyself(cur, des);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         //drawroadBetween2Location(curLocation, desLocation);
         hideButtonFindVehicleAndPeople();
-        for (ActiveUser activeUser : list) {
-            new CustomMarkerAsync(this).execute(activeUser);
+        if (list.size() > 0) {
+            for (ActiveUser activeUser : list) {
+                new CustomMarkerAsync(this).execute(activeUser);
+            }
         }
         //ForGraber.getInstance().getAllNeederNear(this, mUser.getUid());
     }

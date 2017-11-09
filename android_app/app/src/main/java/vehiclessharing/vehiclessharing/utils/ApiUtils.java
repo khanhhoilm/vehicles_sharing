@@ -1,8 +1,5 @@
 package vehiclessharing.vehiclessharing.utils;
 
-import vehiclessharing.vehiclessharing.api.ApiService;
-import vehiclessharing.vehiclessharing.controller.RestManager;
-
 /**
  * Created by Hihihehe on 9/19/2017.
  */

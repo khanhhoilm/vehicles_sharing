@@ -1,22 +1,23 @@
 <resources>
     <string name="app_name">Vehicles Sharing</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="email">Email</string>
-    <string name="passowrd">Password</string>
-    <string name="login">LOGIN</string>
-    <string name="sex">Sex</string>
-    <string name="phonenumber">Phone Number</string>
-    <string name="birthday">Birth Day</string>
-    <string name="rate">Rate</string>
-    <string name="male">Male</string>
-    <string name="female">Female</string>
-    <string name="update_profile">Update profile</string>
+    <string name="passowrd">Mật khẩu</string>
+    <string name="login">ĐĂNG NHẬP</string>
+    <string name="sex">Giới tính</string>
+    <string name="phonenumber">Số điện thoại</string>
+    <string name="birthday">Ngày sinh</string>
+    <string name="rate">Đánh giá</string>
+    <string name="male">Nam</string>
+    <string name="female">Nữ</string>
+    <string name="update_profile">Lưu chỉnh sửa</string>
     <string name="current_password">Current Password</string>
     <string name="new_password">New Password</string>
-    <string name="comfirm_password">Comfirm Password</string>
-    <string name="cancel">Cancel</string>
-    <string name="edit_profile">Edit Profile</string>
+    <string name="comfirm_password">Nhập lại mật khẩu</string>
+    <string name="add_request">Đăng ký</string>
+    <string name="send_request">Gửi</string>
+    <string name="cancel">Hủy bỏ</string>
+    <string name="edit_profile">Thông tin cá nhân</string>
     <string name="change_password">Change Password</string>
     <string name="address">Address</string>
     <string name="show_pwd">Show Password</string>
@@ -48,9 +49,16 @@
     <string name="no_internet">Lỗi kết nối mạng vui lòng kiểm tra kết nối</string>
     <string name="add_request_fail">Đăng ký không thành công, vui lòng thử lại</string>
     <string name="place_details">&lt;b&gt;%1$s&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Place Id: %2$s&lt;/i&gt;&lt;br/&gt;Address: %3$s&lt;br/&gt;Phone: %4$s&lt;br/&gt;Website: %5$s</string>
+    <string name="here">Bạn đang ở đây</string>
 
+    <string name="my_source"></string>
+    <string name="title_send_request">Bạn có chắc muốn gửi yêu cầu?</string>
+    <string name="confirm_send_request">Bạn chỉ được gửi thông báo đến 1 người, sau khi nhận lại yêu cầu đồng ý chuyến đí của hai bạn sẽ bắt đầu. Nếu bạn bị từ chối bạn mới có thể gửi tiếp 1 yêu cầu khác</string>
+    <string name="history">Lịch sử các chuyến đi của bạn</string>
+    <string name="rating_another_user">Đánh giá người đi cùng</string>
+    <string name="write_comment_rating">Viết bình luận...</string>
 
-    <string name="api_key">AIzaSyA9bahjV6uVc5aEqyKgdJ6uMBjgqIai5h8</string>
+    <string name="api_key">AIzaSyDhyyqjvSnOqSm6Aq_vkjCvJeR4BI8gTvc</string>
     <string-array name="sexs_array">
         <item>Male</item>
         <item>Female</item>

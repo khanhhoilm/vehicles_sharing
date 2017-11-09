@@ -1,4 +1,4 @@
-package vehiclessharing.vehiclessharing.custom;
+package vehiclessharing.vehiclessharing.viewscustom;
 
 /**
  * Created by Tuan on 07/03/2017.
@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import vehiclessharing.vehiclessharing.R;
+import co.vehiclessharing.R;
 
 public class CustomToast {
 

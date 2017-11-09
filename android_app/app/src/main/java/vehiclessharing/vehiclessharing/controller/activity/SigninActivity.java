@@ -1,4 +1,4 @@
-package vehiclessharing.vehiclessharing.activity;
+package vehiclessharing.vehiclessharing.controller.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -24,9 +24,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;*/
 
-import vehiclessharing.vehiclessharing.R;
+import co.vehiclessharing.R;
 import vehiclessharing.vehiclessharing.constant.Utils;
-import vehiclessharing.vehiclessharing.fragment.Signin_Fragment;
+import vehiclessharing.vehiclessharing.controller.fragment.Signin_Fragment;
 
 
 import static vehiclessharing.vehiclessharing.constant.Utils.Login_Fragment;

@@ -7,9 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import vehiclessharing.vehiclessharing.model.BirthDay;
-import vehiclessharing.vehiclessharing.model.User;
-import vehiclessharing.vehiclessharing.model.UserAddress;
 import vehiclessharing.vehiclessharing.model.UserInfo;
 
 
@@ -92,6 +89,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return sInstance;
     }
 
+    public static String GET_CURRENT_USER(String userId) {
+        String rs = "";
+        rs = "SELECT * FROM " +
+                TABLE_USER ;//+ "WHERE " + USER_ID + "=" + userId;
+        // rs = GET_ALL_ARTICLE_SAVED;
+        return rs;
+    }
+
     /**
      * Check user exists or not exists on device
      *
@@ -118,7 +123,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * Insert data into SQLite
      *
-     * @param user   object to storage
+     * @param user object to storage
      * @param
      * @return true if insert success
      */
@@ -163,36 +168,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public UserInfo getUser(String userId) {
         SQLiteDatabase db = getReadableDatabase();
-        UserInfo user = null;
-        Cursor cursor = db.query(TABLE_USER, new String[]{
-                        USER_ID,
-                        FULL_NAME_COLUMN,
-                        PHONE_NUMBER_COLUMN,
-                        GENDER_COLUMN,
-                        ADDRESS_COLUMN,
-                        BIRTHDAY_COLUMN,
-                        EMAIL_COLUMN,
-                        THUMB_LINK_COLUMN}, USER_ID + " = ?",
-                new String[]{userId}, null, null, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            user.setName(cursor.getString(cursor.getColumnIndex(USER_ID)));
-            user.setName(cursor.getString(cursor.getColumnIndex(FULL_NAME_COLUMN)));
-            user.setGender(cursor.getInt(cursor.getColumnIndex(GENDER_COLUMN)));
-            user.setPhone(cursor.getString(cursor.getColumnIndex(PHONE_NUMBER_COLUMN)));
-            if(cursor.getString(cursor.getColumnIndex(ADDRESS_COLUMN))!=null)
-            {
-                user.setAddress(cursor.getColumnName(cursor.getColumnIndex(ADDRESS_COLUMN)));
+        UserInfo user = new UserInfo();
+        Cursor cursor = db.rawQuery(GET_CURRENT_USER(userId), null);
+        try {
+            if (cursor.getCount() > 0 && cursor.moveToFirst()) {
+                user.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(USER_ID))));
+                user.setName(cursor.getString(cursor.getColumnIndex(FULL_NAME_COLUMN)));
+                user.setGender(cursor.getInt(cursor.getColumnIndex(GENDER_COLUMN)));
+                user.setPhone(cursor.getString(cursor.getColumnIndex(PHONE_NUMBER_COLUMN)));
+                if (cursor.getString(cursor.getColumnIndex(ADDRESS_COLUMN)) != null) {
+                    user.setAddress(cursor.getColumnName(cursor.getColumnIndex(ADDRESS_COLUMN)));
+                }
+                if (cursor.getString(cursor.getColumnIndex(BIRTHDAY_COLUMN)) != null) {
+                    user.setBirthday(cursor.getColumnName(cursor.getColumnIndex(BIRTHDAY_COLUMN)));
+                }
+                if (cursor.getString(cursor.getColumnIndex(THUMB_LINK_COLUMN)) != null) {
+                    user.setAvatarLink(cursor.getString(cursor.getColumnIndex(THUMB_LINK_COLUMN)));
+                }
+                // user = new UserInfo(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), null, null);
+                //Get Addresscursor.close();
             }
-            if (cursor.getString(cursor.getColumnIndex(BIRTHDAY_COLUMN))!=null)
-            {
-                user.setBirthday(cursor.getColumnName(cursor.getColumnIndex(BIRTHDAY_COLUMN)));
-            }
-            if(cursor.getString(cursor.getColumnIndex(THUMB_LINK_COLUMN))!=null)
-            {
-                user.setAvatarLink(THUMB_LINK_COLUMN);
-            }
-           // user = new UserInfo(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), null, null);
-            //Get Addresscursor.close();
+        }catch (Exception e)
+        {
+            Log.d("Exception","DB error");
         }
         db.close();
         return user;

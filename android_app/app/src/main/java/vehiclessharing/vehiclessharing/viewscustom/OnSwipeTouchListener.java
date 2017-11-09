@@ -1,4 +1,4 @@
-package vehiclessharing.vehiclessharing.custom;
+package vehiclessharing.vehiclessharing.viewscustom;
 
 import android.content.Context;
 import android.view.GestureDetector;

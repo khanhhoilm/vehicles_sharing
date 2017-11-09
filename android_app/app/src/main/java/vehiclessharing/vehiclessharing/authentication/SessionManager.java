@@ -1,11 +1,11 @@
-package vehiclessharing.vehiclessharing.session;
+package vehiclessharing.vehiclessharing.authentication;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import vehiclessharing.vehiclessharing.activity.SigninActivity;
+import vehiclessharing.vehiclessharing.controller.activity.SigninActivity;
 
 /**
  * Created by Hihihehe on 9/23/2017.
@@ -24,10 +24,10 @@ public class SessionManager {
     int PRIVATE_MODE = 0;
 
     // Sharedpref file name
-    private static final String PREF_NAME = "vsharing_is_login";
+    public static final String PREF_NAME_LOGIN = "vsharing_is_login";
 
     // All Shared Preferences Keys
-    private static final String IS_LOGIN = "is_loggedin";
+    public static final String IS_LOGIN = "is_loggedin";
 
     // User name (make variable public to access from outside)
     public static final String KEY_NAME = "name";
@@ -40,7 +40,7 @@ public class SessionManager {
     // Constructor
     public SessionManager(Context context){
         this._context = context;
-        pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+        pref = _context.getSharedPreferences(PREF_NAME_LOGIN, PRIVATE_MODE);
         editor = pref.edit();
     }
     public void createLoginSession(int userId, String session_id){

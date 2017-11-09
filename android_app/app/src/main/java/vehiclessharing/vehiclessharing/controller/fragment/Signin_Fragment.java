@@ -1,13 +1,11 @@
-package vehiclessharing.vehiclessharing.fragment;
+package vehiclessharing.vehiclessharing.controller.fragment;
 
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.content.res.XmlResourceParser;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.InputType;
@@ -26,35 +24,21 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.nio.Buffer;
-
-import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import vehiclessharing.vehiclessharing.R;
-import vehiclessharing.vehiclessharing.activity.MainActivity;
-import vehiclessharing.vehiclessharing.activity.SigninActivity;
+import co.vehiclessharing.R;
+import vehiclessharing.vehiclessharing.controller.activity.MainActivity;
 import vehiclessharing.vehiclessharing.constant.Utils;
-import vehiclessharing.vehiclessharing.controller.RestManager;
-import vehiclessharing.vehiclessharing.custom.CustomToast;
+import vehiclessharing.vehiclessharing.api.RestManager;
+import vehiclessharing.vehiclessharing.viewscustom.CustomToast;
 import vehiclessharing.vehiclessharing.database.DatabaseHelper;
 //import vehiclessharing.vehiclessharing.database.RealmDatabase;
 import vehiclessharing.vehiclessharing.model.SignInResult;
-import vehiclessharing.vehiclessharing.model.SignUpResult;
 //import vehiclessharing.vehiclessharing.model.UserOnDevice;
-import vehiclessharing.vehiclessharing.model.Users;
 import vehiclessharing.vehiclessharing.model.Validation;
-import vehiclessharing.vehiclessharing.session.SessionManager;
+import vehiclessharing.vehiclessharing.authentication.SessionManager;
 
 public class Signin_Fragment extends Fragment implements View.OnClickListener {
     private static View view;
@@ -216,7 +200,9 @@ public class Signin_Fragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.btnLogin:
                 mProgress.show();
-                checkValidation();
+                if (checkValidation()) {
+                    login();
+                }
                 break;
 
             case R.id.forgot_password:
@@ -237,21 +223,10 @@ public class Signin_Fragment extends Fragment implements View.OnClickListener {
                         .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
                         .replace(R.id.frameContainer, new SignUp_Fragment()).commit();
                 break;
-           /* case R.id.btnGgLogin:
-                signInGoogle();
-                break;*/
         }
 
     }
 
-
-    /**
-     * Sign in google plus
-     */
-   /* private void signInGoogle() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(session.mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }*/
 
     /**
      * Handling Result for login with google/facebook
@@ -264,33 +239,16 @@ public class Signin_Fragment extends Fragment implements View.OnClickListener {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-       /* // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            if (result.isSuccess()) {
-                mProgress.show();
-                // Google Sign In was successful, authenticate with Firebase
-                GoogleSignInAccount account = result.getSignInAccount();
-                firebaseAuthWithGoogle(account);
-            } else {
-                // Google Sign In failed, update UI appropriately
-                // ...
-            }
-        }
-        else {
-            mProgress.show();
-            // Pass the activity result back to the Facebook SDK
-            mCallbackManager.onActivityResult(requestCode, resultCode, data);
-        }*/
     }
 
 
     /**
      * Check validation before login
      */
-    private void checkValidation() {
+    private boolean checkValidation() {
+        boolean checkValidate = false;
         // Get email and password
-        final String phoneNumber = txtPhone.getText().toString();
+        String phoneNumber = txtPhone.getText().toString();
         String password = txtPassword.getText().toString();
 
         // Check for both field is empty or not
@@ -300,31 +258,46 @@ public class Signin_Fragment extends Fragment implements View.OnClickListener {
                     Utils.EnterBothCredentials);
 
         }
-        // Check if email id is valid or not
+        // Check if phone id is valid or not
         else {
-            Validation validation = Validation.checkValidPhone(phoneNumber);
-            if (!validation.getIsValid())
+            Validation validatePhone = Validation.checkValidPhone(phoneNumber);
+            Validation validatePassword = Validation.checkValidPassword(password);
+            if (!validatePhone.getIsValid()) {
                 new CustomToast().Show_Toast(getActivity(), view,
-                        validation.getMessageValid());
+                        validatePhone.getMessageValid());
+            }
+            if (!validatePassword.getIsValid()) {
+                new CustomToast().Show_Toast(getActivity(), view,
+                        validatePassword.getMessageValid());
+            }
+            // Else do login with email and password
+            if (validatePhone.getIsValid() && validatePassword.getIsValid()) {
+                checkValidate = true;
+                // signInWithEmailAndPassword(getEmailId,getPassword);
+            }
+        }
+        return checkValidate;
+    }
 
-                // Else do login with email and password
-            else {
-                password = SignUp_Fragment.md5(password);
-                //CALL API SIGNIN
-                mManager.getApiService().signIn(phoneNumber, password).enqueue(new Callback<SignInResult>() {
-                    @Override
-                    public void onResponse(Call<SignInResult> call, Response<SignInResult> response) {
-                        if (response.isSuccessful()) {
-                            //Users user = response.body();
-                            String checkLogin = null;
-                            SignInResult signInResult = response.body();
+    private void login() {
+        String password = SignUp_Fragment.md5(txtPassword.getText().toString());
+        Log.d("pss","pw"+password);
+        String phoneNumber = txtPhone.getText().toString();
+        //CALL API SIGNIN
+        mManager.getApiService().signIn(phoneNumber, password).enqueue(new Callback<SignInResult>() {
+            @Override
+            public void onResponse(Call<SignInResult> call, Response<SignInResult> response) {
+                if (response.isSuccessful()) {
+                    //Users user = response.body();
+                    String checkLogin = null;
+                    SignInResult signInResult = response.body();
 
-                            switch (signInResult.getStatus().getError()) {
-                                case 0:
-                                    mProgress.dismiss();
-                                    session.createLoginSession(signInResult.getData().getUserInfo().getId(),signInResult.getData().getApiToken() );
-                                    DatabaseHelper databaseHelper=new DatabaseHelper(getActivity());
-                                    databaseHelper.insertUser(signInResult.getData().getUserInfo());
+                    switch (signInResult.getStatus().getError()) {
+                        case 0:
+                            mProgress.dismiss();
+                            session.createLoginSession(signInResult.getData().getUserInfo().getId(), signInResult.getData().getApiToken());
+                            DatabaseHelper databaseHelper = new DatabaseHelper(getActivity());
+                            databaseHelper.insertUser(signInResult.getData().getUserInfo());
                                    /* Realm.init(getContext());
                                     Realm realm = Realm.getDefaultInstance();
 
@@ -335,74 +308,31 @@ public class Signin_Fragment extends Fragment implements View.OnClickListener {
                                     userOnDevice.setUser(signInResult.getData().getUserInfo());
                                     RealmDatabase realmDatabase=new RealmDatabase();
                                     realmDatabase.storageOnDiviceRealm(userOnDevice);*/
-                                    //realm.commitTransaction();//close the db
+                            //realm.commitTransaction();//close the db
 
-                                    Intent intent = new Intent(getActivity(), MainActivity.class);
-                                    Bundle bd = new Bundle();
-                                    //  bd.putSerializable("user_info", user);
-                                    intent.putExtras(bd);
-                                    startActivity(intent);
-                                    break;
-                                case 1:
-                                    new CustomToast().Show_Toast(getActivity(), view, "Số điện thoại hoặc mật khẩu không chính xác. Vui lòng thử lại");
-                                    mProgress.dismiss();
-                                    break;
-                                //Toast.makeText(getActivity(), "Số điện thoại đã được dùng để đăng ký", Toast.LENGTH_SHORT).show();
-                            }
-                        }
+                            Intent intent = new Intent(getActivity(), MainActivity.class);
+                            Bundle bd = new Bundle();
+                            //  bd.putSerializable("user_info", user);
+                            intent.putExtras(bd);
+                            startActivity(intent);
+                            break;
+                        case 1:
+                            new CustomToast().Show_Toast(getActivity(), view, "Số điện thoại hoặc mật khẩu không chính xác. Vui lòng thử lại");
+                            mProgress.dismiss();
+                            break;
+                        //Toast.makeText(getActivity(), "Số điện thoại đã được dùng để đăng ký", Toast.LENGTH_SHORT).show();
                     }
+                }
+            }
 
-                    @Override
-                    public void onFailure(Call<SignInResult> call, Throwable t) {
-                        Log.d("Signin", "onFailure");
-                        new CustomToast().Show_Toast(getActivity(), view, "Số điện thoại hoặc mật khẩu không chính xác. Vui lòng thử lại");
-                        mProgress.dismiss();
-
-                    }
-
-                });
-                // signInWithEmailAndPassword(getEmailId,getPassword);
+            @Override
+            public void onFailure(Call<SignInResult> call, Throwable t) {
+                Log.d("Signin", "onFailure");
+                new CustomToast().Show_Toast(getActivity(), view, "Số điện thoại hoặc mật khẩu không chính xác. Vui lòng thử lại");
+                mProgress.dismiss();
 
             }
-        }
+
+        });
     }
-
-   /* private String bodyToString(final ResponseBody request) {
-        try {
-            final ResponseBody copy = request;
-            final okio.Buffer buffer = new okio.Buffer();
-            if (copy != null)
-                copy.string();
-            else
-                return "";
-            return buffer.readUtf8();
-        } catch (final IOException e) {
-            return "did not work";
-        }
-    }
-   */ //[End]Check Validation before login
-
-   /*
-    private void signInWithEmailAndPassword(String getEmailId, String getPassword){
-        mProgress.show();
-        mAuth.signInWithEmailAndPassword(getEmailId, getPassword)
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        mProgress.dismiss();
-                        Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
-
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            mProgress.dismiss();
-                            new CustomToast().Show_Toast(getActivity(), view,
-                                    task.getException().getMessage());
-                        }
-//                        else getProfileUser();
-                    }
-                });
-    }*/
-
 }

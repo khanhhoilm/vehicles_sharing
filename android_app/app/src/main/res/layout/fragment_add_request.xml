@@ -158,7 +158,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/white"
-            android:text="OK"
+            android:text="@string/add_request"
             android:textColor="@color/black" />
 
         <View
@@ -172,7 +172,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/white"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:textColor="@color/black"/>
     </LinearLayout>
 </LinearLayout>

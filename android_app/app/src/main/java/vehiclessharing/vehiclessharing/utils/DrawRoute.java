@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.location.LocationManager;
 import android.util.Log;
 
-import com.directions.route.AbstractRouting;
 import com.directions.route.Route;
 import com.directions.route.RouteException;
 import com.directions.route.Routing;
@@ -17,7 +16,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 
-import vehiclessharing.vehiclessharing.activity.MainActivity;
+import vehiclessharing.vehiclessharing.controller.activity.MainActivity;
 import vehiclessharing.vehiclessharing.permission.CheckInternetAndLocation;
 
 import static android.content.Context.LOCATION_SERVICE;
@@ -70,6 +69,22 @@ public class DrawRoute implements RoutingListener {
         routing.execute();
     }
 
+    public void drawroadBetween4Location(LatLng latLng1, LatLng latLng2,LatLng latLng3, LatLng latLng4, int subject) {
+        mSubject = subject;
+        LocationManager lm = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
+        CheckInternetAndLocation check = new CheckInternetAndLocation(mContext);
+        if (!check.isOnline() || !check.checkLocationPermission() ||
+                !lm.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                !lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) return;
+        Routing routing = new Routing.Builder()
+                .travelMode(Routing.TravelMode.DRIVING)
+                .withListener(this)
+                .waypoints(latLng1, latLng2,latLng3,latLng4)
+                .build();
+        routing.execute();
+    }
+
+
     /**
      * if subject equal 0 => current user route have black color
      * if subject equal 1 => not current user route have blue color
@@ -100,9 +115,12 @@ public class DrawRoute implements RoutingListener {
                 polyOptions.width(10 + i * 3);
                 polyOptions.addAll(arrayList.get(i).getPoints());
                 polyline = MainActivity.mGoogleMap.addPolyline(polyOptions);
-                if (mSubject != 0) {
-                    polylineNotCurUser = polyline;
-                }
+                //if (mSubject != 0) {
+                    MainActivity.polylineList.add(mSubject,polyline);
+
+               // Store a data object with the polyline, used here to indicate an arbitrary typ
+                // polyline.setTag();
+                //}
                 // Toast.makeText(getApplicationContext(), "Route " + (i + 1) + ": distance - " + arrayList.get(i).getDistanceValue() + ": duration - " + arrayList.get(i).getDurationValue(), Toast.LENGTH_SHORT).show();
             }
 

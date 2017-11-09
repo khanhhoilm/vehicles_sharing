@@ -1,23 +1,21 @@
 package vehiclessharing.vehiclessharing.api;
 
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.Multipart;
 import retrofit2.http.POST;
-import retrofit2.http.Part;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 import vehiclessharing.vehiclessharing.model.RequestResult;
 import vehiclessharing.vehiclessharing.model.SignInResult;
 import vehiclessharing.vehiclessharing.model.SignUpResult;
+import vehiclessharing.vehiclessharing.model.Status;
 
 
 public interface ApiService {
 
-    String BASE_URL = "http://vehiclessharing.viecit.co/";
+   // String BASE_URL = "http://vehiclessharing.viecit.co/";
+    String BASE_URL = "https://vehicle-sharing.herokuapp.com/";
 
     @POST("users")
     @FormUrlEncoded
@@ -30,7 +28,16 @@ public interface ApiService {
     @FormUrlEncoded
     Call<SignInResult> signIn(@Field("phone") String phone,
                               @Field("password") String password);
-/*
+
+    @POST("users/signout")
+    @FormUrlEncoded
+    Call<Status> signOut(@Field("user_id") String userId,@Field("api_token") String apiToken);
+
+    @POST("users//{user_id}")
+    @FormUrlEncoded
+    Call<Status> updateInfoUser(@Path("user_id") String userId, @Field("api_token") String apiToken );
+
+    /*
      + user_id
  + source_location (lat - long )
  + destination_location ( lat-long )
@@ -54,7 +61,9 @@ public interface ApiService {
     @POST("api/request")
     Call<RequestResult> registerRequest(@Field("user_id") int userId, @Field("source_location") String sourceLocation,
                                         @Field("destination_location") String desLocation, @Field("time_start") String timeStart,
-                                        @Field("api_token") String session, @Field("device_id") String devideId, @Field("vehicle_type") int vehicleType);
+                                        @Field("api_token") String session, @Field("device_id") String devideId, @Field("vehicle_type") int vehicleType,
+                                        @Field("device_token") String deviceToken);
+
 
     /*
 * ultipart

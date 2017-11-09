@@ -1,4 +1,4 @@
-package vehiclessharing.vehiclessharing.controller;
+package vehiclessharing.vehiclessharing.api;
 
 
 import com.google.gson.Gson;
@@ -11,7 +11,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import vehiclessharing.vehiclessharing.api.ApiService;
 
 public class RestManager {
 
@@ -35,7 +34,6 @@ public class RestManager {
             }
         });
         OkHttpClient client= httpClient.build();
-
 
         if (apiService == null) {
 

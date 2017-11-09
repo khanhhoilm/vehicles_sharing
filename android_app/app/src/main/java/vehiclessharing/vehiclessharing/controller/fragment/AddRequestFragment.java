@@ -1,4 +1,4 @@
-package vehiclessharing.vehiclessharing.fragment;
+package vehiclessharing.vehiclessharing.controller.fragment;
 
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -19,7 +19,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -34,7 +33,6 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.AutocompletePrediction;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
@@ -42,28 +40,24 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
-import okhttp3.FormBody;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import vehiclessharing.vehiclessharing.R;
+import co.vehiclessharing.R;
 import vehiclessharing.vehiclessharing.adapter.PlaceAutocompleteAdapter;
 import vehiclessharing.vehiclessharing.adapter.SpinerVehicleTypeAdapter;
-import vehiclessharing.vehiclessharing.controller.RestManager;
+import vehiclessharing.vehiclessharing.api.RestManager;
 import vehiclessharing.vehiclessharing.model.ActiveUser;
 import vehiclessharing.vehiclessharing.model.RequestResult;
-import vehiclessharing.vehiclessharing.session.SessionManager;
+import vehiclessharing.vehiclessharing.authentication.SessionManager;
+//import vehiclessharing.vehiclessharing.push.CustomFirebaseInstanceIDService;
+import vehiclessharing.vehiclessharing.push.CustomFirebaseInstanceIDService;
 import vehiclessharing.vehiclessharing.utils.PlaceHelper;
 
 /**
@@ -105,7 +99,7 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
     private Drawable mDrawable;
     private RestManager mManager;
     private String currentDay;
-    private int vehicleType=1;
+    private int vehicleType = 1;
 
     private OnFragmentAddRequestListener mListener;
 
@@ -140,12 +134,12 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-     if(mGoogleApiClient==null) {
-         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                 .enableAutoManage(getActivity(), 0, this)
-                 .addApi(Places.GEO_DATA_API)
-                 .build();
-     }
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                    .enableAutoManage(getActivity(), 0, this)
+                    .addApi(Places.GEO_DATA_API)
+                    .build();
+        }
         view = inflater.inflate(R.layout.fragment_add_request, container, false);
 
         addControls();
@@ -160,11 +154,11 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
 
         switch (getWhatBtnClick) {
             case "btnFindPeople":
-               // vehicleType=spType.getSelectedItemPosition()+1;
+                // vehicleType=spType.getSelectedItemPosition()+1;
                 txtTitle.setText(mContext.getResources().getString(R.string.dialog_find_people));
                 break;
             case "btnFindVehicles":
-               // vehicleType=0;
+                // vehicleType=0;
                 txtTitle.setText(mContext.getResources().getString(R.string.dialog_find_vehicle));
 
         }
@@ -195,7 +189,7 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
         //set current location
         imgClearDesLocation = (ImageView) view.findViewById(R.id.imgClearDesLocation);
         txtTimeStart.setText(sdf1.format(calendar.getTime()));
-        currentDay=sdf2.format(calendar.getTime());
+        currentDay = sdf2.format(calendar.getTime());
         txtTimeStart.setOnClickListener(this);
         imgClearCurLocation.setOnClickListener(this);
         imgClearDesLocation.setOnClickListener(this);
@@ -205,13 +199,13 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
 
         mDrawable = getResources().getDrawable(R.drawable.ic_warning_red_600_24dp);
         mDrawable.setBounds(0, 0, mDrawable.getIntrinsicWidth(), mDrawable.getIntrinsicHeight());
-        String curPosition= PlaceHelper.getInstance(mContext).getCurrentPlace();
+        String curPosition = PlaceHelper.getInstance(mContext).getCurrentPlace();
         txtCurLocation.setText(curPosition);
-        spType= (Spinner) view.findViewById(R.id.spVehicleType);
-        List<String> type=new ArrayList<>();
+        spType = (Spinner) view.findViewById(R.id.spVehicleType);
+        List<String> type = new ArrayList<>();
         type.add("Xe máy");
         type.add("Ô tô");
-        adapter=new SpinerVehicleTypeAdapter(mContext,type);
+        adapter = new SpinerVehicleTypeAdapter(mContext, type);
         spType.setAdapter(adapter);
     }
 
@@ -249,7 +243,7 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
             case R.id.txtCurLocate: {
                 //   int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
                 try {
-                 //   txtCurLocation.setText("");
+                    //   txtCurLocation.setText("");
                     Intent intent =
                             new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
                                     .build(getActivity());
@@ -262,7 +256,7 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
                 break;
             }
             case R.id.txtDesLocate:
-               // txtDesLocation.setText("");
+                // txtDesLocation.setText("");
 
                 try {
                     Intent intent =
@@ -276,9 +270,8 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
                 }
                 break;
             case R.id.btnAddOK:
-                boolean checkEmpty=checkValidation();
-                if(!checkEmpty)
-                {
+                boolean checkEmpty = checkValidation();
+                if (!checkEmpty) {
                     sendRequestToServer();
                 }
                 break;
@@ -299,31 +292,41 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
     private void sendRequestToServer() {
         switch (getWhatBtnClick) {
             case "btnFindPeople":
-                vehicleType=spType.getSelectedItemPosition()+1;
-             //   txtTitle.setText(mContext.getResources().getString(R.string.dialog_find_people));
+                vehicleType = spType.getSelectedItemPosition() + 1;
+                //   txtTitle.setText(mContext.getResources().getString(R.string.dialog_find_people));
                 break;
             case "btnFindVehicles":
-                vehicleType=0;
-              //  txtTitle.setText(mContext.getResources().getString(R.string.dialog_find_vehicle));
+                vehicleType = 0;
+                //  txtTitle.setText(mContext.getResources().getString(R.string.dialog_find_vehicle));
 
         }
-        SharedPreferences sharedPreferences=getActivity().getSharedPreferences("vsharing_is_login",Context.MODE_PRIVATE);
-        int userId=sharedPreferences.getInt(SessionManager.USER_ID,3);
-        String sessionId=sharedPreferences.getString(SessionManager.KEY_SESSION,"");
-        final LatLng srcLatLng=PlaceHelper.getInstance(mContext).getLatLngByName(txtCurLocation.getText().toString());
-        final String sourLocation="{\"lat\":\""+String.valueOf(srcLatLng.latitude)+"\",\"lng\":\""+String.valueOf(srcLatLng.longitude)+"\"}";
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        Log.d("Token FCM", "Token Value: " + refreshedToken);
 
-        final LatLng desLatLng=PlaceHelper.getInstance(mContext).getLatLngByName(txtDesLocation.getText().toString());
-        final String desLocation="{\"lat\":\""+String.valueOf(desLatLng.latitude)+"\",\"lng\":\""+String.valueOf(desLatLng.longitude)+"\"}";
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SessionManager.PREF_NAME_LOGIN, Context.MODE_PRIVATE);
+        int userId = sharedPreferences.getInt(SessionManager.USER_ID, 3);
+        String sessionId = sharedPreferences.getString(SessionManager.KEY_SESSION, "");
+        final LatLng srcLatLng = PlaceHelper.getInstance(mContext).getLatLngByName(txtCurLocation.getText().toString());
+        final String sourLocation = "{\"lat\":\"" + String.valueOf(srcLatLng.latitude) + "\",\"lng\":\"" + String.valueOf(srcLatLng.longitude) + "\"}";
 
-        final String time=txtTimeStart.getText().toString();
-        String deviceId= Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
-        String deviceToken="";
-       // mListener.addRequestSuccess(srcLatLng,desLatLng,time,vehicleType);
+        final LatLng desLatLng = PlaceHelper.getInstance(mContext).getLatLngByName(txtDesLocation.getText().toString());
+        final String desLocation = "{\"lat\":\"" + String.valueOf(desLatLng.latitude) + "\",\"lng\":\"" + String.valueOf(desLatLng.longitude) + "\"}";
 
-       // vehicleType=spType.getSelectedItemPosition()+1;
+        final String time = txtTimeStart.getText().toString();
+        String deviceId = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
+        String deviceToken = FirebaseInstanceId.getInstance().getToken();
+        SharedPreferences preferencesGetTokenDevice=getActivity().getSharedPreferences(CustomFirebaseInstanceIDService.DEVICE_TOKEN_REFRESH,Context.MODE_PRIVATE);
+
+
+       String tokenFCM=preferencesGetTokenDevice.getString(CustomFirebaseInstanceIDService.DEVICE_TOKEN,"");
+        Log.d("Token FCM", "Token Value: " + deviceToken);
+        Log.d("Token from sharepre","Token"+tokenFCM);
+        // /   Log.d(TAG, "Token Value: " + refreshedToken);
+      // mListener.addRequestSuccess(srcLatLng,desLatLng,time,vehicleType);
+
+        // vehicleType=spType.getSelectedItemPosition()+1;
         //callback b/c some reasom about network or anything not right
-     //   mListener.addRequestResult(,,txtTimeStart.getText());
+        //   mListener.addRequestResult(,,txtTimeStart.getText());
         //callback to true if add request success
 /*
 * @Query("user_id") int userId, @Query("source_location") String sourceLocation,
@@ -361,145 +364,28 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
             }
         });
 */
-        mManager.getApiService().registerRequest(userId,sourLocation,desLocation,time,sessionId,deviceId,vehicleType).enqueue(new Callback<RequestResult>() {
+        mManager.getApiService().registerRequest(userId, sourLocation, desLocation, time, sessionId, deviceId, vehicleType,deviceToken).enqueue(new Callback<RequestResult>() {
             @Override
             public void onResponse(Call<RequestResult> call, Response<RequestResult> response) {
                 if (response.isSuccessful()) {
-                    List<ActiveUser> activeUserList=new ArrayList<ActiveUser>();
-                    if(response.body().getActiveUsers().size()>0) {
-                        activeUserList=response.body().getActiveUsers();
-
-                    }else {
-                        mListener.addRequestSuccess(srcLatLng, desLatLng, time, vehicleType, );
-                    }
-
-                            @Override
-                            public boolean isEmpty() {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean contains(Object o) {
-                                return false;
-                            }
-
-                            @NonNull
-                            @Override
-                            public Iterator<ActiveUser> iterator() {
-                                return null;
-                            }
-
-                            @NonNull
-                            @Override
-                            public Object[] toArray() {
-                                return new Object[0];
-                            }
-
-                            @NonNull
-                            @Override
-                            public <T> T[] toArray(@NonNull T[] a) {
-                                return null;
-                            }
-
-                            @Override
-                            public boolean add(ActiveUser activeUser) {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean remove(Object o) {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean containsAll(@NonNull Collection<?> c) {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean addAll(@NonNull Collection<? extends ActiveUser> c) {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean addAll(int index, @NonNull Collection<? extends ActiveUser> c) {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean removeAll(@NonNull Collection<?> c) {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean retainAll(@NonNull Collection<?> c) {
-                                return false;
-                            }
-
-                            @Override
-                            public void clear() {
-
-                            }
-
-                            @Override
-                            public ActiveUser get(int index) {
-                                return null;
-                            }
-
-                            @Override
-                            public ActiveUser set(int index, ActiveUser element) {
-                                return null;
-                            }
-
-                            @Override
-                            public void add(int index, ActiveUser element) {
-
-                            }
-
-                            @Override
-                            public ActiveUser remove(int index) {
-                                return null;
-                            }
-
-                            @Override
-                            public int indexOf(Object o) {
-                                return 0;
-                            }
-
-                            @Override
-                            public int lastIndexOf(Object o) {
-                                return 0;
-                            }
-
-                            @Override
-                            public ListIterator<ActiveUser> listIterator() {
-                                return null;
-                            }
-
-                            @NonNull
-                            @Override
-                            public ListIterator<ActiveUser> listIterator(int index) {
-                                return null;
-                            }
-
-                            @NonNull
-                            @Override
-                            public List<ActiveUser> subList(int fromIndex, int toIndex) {
-                                return null;
-                            }
-                        });
-                    }
-                        dismiss();
-                }else
-                {
+                    List<ActiveUser> activeUserList = new ArrayList<ActiveUser>();
+                    if (response.body().getActiveUsers().size() > 0) {
+                        activeUserList = response.body().getActiveUsers();
+                        //mListener.addRequestSuccess(srcLatLng, desLatLng, time, vehicleType, response.body().getActiveUsers());
+                    }/*else {
+                        mListener.addRequestSuccess(srcLatLng, desLatLng, time, vehicleType,
+                     */
+                    mListener.addRequestSuccess(srcLatLng, desLatLng, time, vehicleType, activeUserList);
+                    dismiss();
+                } else {
                     Toast.makeText(mContext, mContext.getString(R.string.no_internet), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<RequestResult> call, Throwable t) {
-               // mListener.addRequestSuccess(srcLatLng,desLatLng,time,vehicleType);
-              //  dismiss();
+                // mListener.addRequestSuccess(srcLatLng,desLatLng,time,vehicleType);
+                //  dismiss();
                 Toast.makeText(mContext, mContext.getString(R.string.no_internet), Toast.LENGTH_SHORT).show();
 
             }
@@ -529,19 +415,16 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
 
     private boolean checkValidation() {
         String curLocate = txtCurLocation.getText().toString();
-        String desLocate=txtDesLocation.getText().toString();
-        boolean checkNull=false;
-        if(curLocate.equals(""))
-        {
+        String desLocate = txtDesLocation.getText().toString();
+        boolean checkNull = false;
+        if (curLocate.equals("")) {
             Toast.makeText(mContext, "Vị trí bắt đầu không được để trống", Toast.LENGTH_SHORT).show();
             //txtCurLocation.setError("Vị trí bắt đầu không nên để trống");
-            checkNull=true;
-        }
-        else if(desLocate.equals(""))
-        {
+            checkNull = true;
+        } else if (desLocate.equals("")) {
             Toast.makeText(mContext, "Vị trí kết thúc không được để trống", Toast.LENGTH_SHORT).show();
             //txtDesLocation.setError("Vị trí kết thúc không nên để trống");
-            checkNull=true;
+            checkNull = true;
         }
         return checkNull;
     }
@@ -551,7 +434,7 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
         Place place = PlaceAutocomplete.getPlace(getActivity(), data);
         if (requestCode == CUR_PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             //    if (resultCode == 1) {
-            if (txtCurLocation != null&&place!=null) {
+            if (txtCurLocation != null && place != null) {
                 txtCurLocation.setText(place.getAddress());
             }
 
@@ -565,8 +448,7 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
                 // The user canceled the operation.
             }*/
         } else if (requestCode == DES_PLACE_AUTOCOMPLETE_REQUEST_CODE) {
-            if(txtDesLocation!=null&&place!=null)
-            {
+            if (txtDesLocation != null && place != null) {
                 txtDesLocation.setText(place.getAddress());
             }
         }
@@ -660,6 +542,7 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
     public interface OnFragmentAddRequestListener {
         // TODO: Update argument type and name
         void addRequestSuccess(LatLng cur, LatLng des, String time, int type, List<ActiveUser> list);
+
         void addRequestFailure();
     }
 }

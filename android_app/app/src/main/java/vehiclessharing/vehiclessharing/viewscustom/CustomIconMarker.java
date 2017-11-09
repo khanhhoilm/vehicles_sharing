@@ -1,4 +1,4 @@
-package vehiclessharing.vehiclessharing.custom;
+package vehiclessharing.vehiclessharing.viewscustom;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -13,7 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 
-import vehiclessharing.vehiclessharing.R;
+import co.vehiclessharing.R;
 
 /**
  * Created by Hihihehe on 5/27/2017

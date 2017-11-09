@@ -103,13 +103,11 @@
         >
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/txtTouchSendRequest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/background_color"
             android:gravity="center"
-            android:text="You touch here
-If you want to go together this people"
             android:textColor="@color/white" />
         <!--Button
             android:layout_width="match_parent"

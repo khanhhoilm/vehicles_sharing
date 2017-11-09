@@ -32,11 +32,9 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 
-import vehiclessharing.vehiclessharing.R;
-import vehiclessharing.vehiclessharing.activity.MainActivity;
+import co.vehiclessharing.R;
+import vehiclessharing.vehiclessharing.controller.activity.MainActivity;
 import vehiclessharing.vehiclessharing.model.ActiveUser;
-import vehiclessharing.vehiclessharing.model.RequestInfo;
-import vehiclessharing.vehiclessharing.model.UserInfo;
 
 /**
  * Created by Hihihehe on 6/5/2017.
@@ -44,9 +42,9 @@ import vehiclessharing.vehiclessharing.model.UserInfo;
 
 
 public class CustomMarkerAsync extends AsyncTask<ActiveUser, Void, Bitmap> {
-    private UserInfo user;
+    /*private UserInfo user;
     private RequestInfo requestInfo;
-    private Activity mActivity;
+    */private Activity mActivity;
     private GoogleMap googleMap;
     private ActiveUser activeUser;
     //  private String hashKey;
@@ -64,11 +62,11 @@ public class CustomMarkerAsync extends AsyncTask<ActiveUser, Void, Bitmap> {
 
         try {
             activeUser = params[0];
-            user = params[0].getUserInfo();
+           /* user = params[0].getUserInfo();
             requestInfo = params[0].getRequestInfo();
-
-            if (user.getAvatarLink() != null) {
-                bitmap = BitmapFactory.decodeStream(fetch(user.getAvatarLink()));
+*/
+            if (activeUser.getUserInfo().getAvatarLink() != null) {
+                bitmap = BitmapFactory.decodeStream(fetch(activeUser.getUserInfo().getAvatarLink()));
             }/* else {
                 bitmap = BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.temp);
             }*/
@@ -92,23 +90,24 @@ public class CustomMarkerAsync extends AsyncTask<ActiveUser, Void, Bitmap> {
         Marker customMarker = null;
         //object of user need add marker graber or needer
 
-        if (requestInfo != null && user != null && requestInfo.getSourceLocation() != null) {
+        if (activeUser != null && activeUser.getRequestInfo() != null && activeUser.getUserInfo() != null) {
             try {
-                source = new LatLng(Double.parseDouble(requestInfo.getSourceLocation().getLat()), Double.parseDouble(requestInfo.getSourceLocation().getLng()));
-                customMarker = googleMap.addMarker(new MarkerOptions().position(source).title(user.getName())
+                source = new LatLng(Double.parseDouble(activeUser.getRequestInfo().getSourceLocation().getLat()), Double.parseDouble(activeUser.getRequestInfo().getSourceLocation().getLng()));
+                customMarker = googleMap.addMarker(new MarkerOptions().position(source).title(activeUser.getUserInfo().getName())
                         .icon(BitmapDescriptorFactory.fromBitmap(bitmap1)));
-                customMarker.setTag(activeUser);
+                customMarker.setTag("another");
                 MainActivity.markerHashMap.put(activeUser, customMarker);
+                MainActivity.userHashMap.put(customMarker,activeUser);
             } catch (Exception e) {
 
             }
-        } else {
+        } /*else {
             source = new LatLng(10.795435800000002, 106.6824499);
             customMarker = googleMap.addMarker(new MarkerOptions().position(source).title(user.getName())
                     .icon(BitmapDescriptorFactory.fromBitmap(bitmap1)));
             customMarker.setTag(activeUser);
             MainActivity.markerHashMap.put(activeUser, customMarker);
-        }
+        }*/
 
     }
 

@@ -1,6 +1,5 @@
 package vehiclessharing.vehiclessharing.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
@@ -15,7 +14,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import vehiclessharing.vehiclessharing.activity.MainActivity;
+import vehiclessharing.vehiclessharing.controller.activity.MainActivity;
+import vehiclessharing.vehiclessharing.model.LatLngLocation;
 
 /**
  * Created by Hihihehe on 10/8/2017.
@@ -93,6 +93,33 @@ public class PlaceHelper {
         geocoder = new Geocoder(mContext);
         try {
             addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+            String[] listAddress = new String[4];
+            listAddress[0] = addresses.get(0).getAddressLine(0);
+            listAddress[1] = addresses.get(0).getLocality();
+            listAddress[2] = addresses.get(0).getAdminArea();
+            listAddress[3] = addresses.get(0).getCountryName();
+
+            String fullAd = listAddress[0] + ", " + listAddress[1] + ", " + listAddress[2] + ", " + listAddress[3];
+            Log.e("fullAddress", fullAd);
+            for (int i = 0; i < listAddress.length; i++) {
+                if (listAddress[i]!=null && !listAddress[i].isEmpty()) {
+                    fullAddress = fullAddress.concat(listAddress[i]);
+                    //fullAddress += listAddress;
+                    if (i != listAddress.length - 1) {
+                        fullAddress = fullAddress.concat(", ");
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return fullAddress;
+    }
+    public String getAddressByLatLngLocation(LatLngLocation latLng) throws IOException {
+        String fullAddress = "";
+        geocoder = new Geocoder(mContext);
+        try {
+            addresses = geocoder.getFromLocation(Double.parseDouble(latLng.getLat()), Double.parseDouble(latLng.getLng()), 1);
             String[] listAddress = new String[4];
             listAddress[0] = addresses.get(0).getAddressLine(0);
             listAddress[1] = addresses.get(0).getLocality();
