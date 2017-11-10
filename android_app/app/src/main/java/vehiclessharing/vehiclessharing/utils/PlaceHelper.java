@@ -42,37 +42,41 @@ public class PlaceHelper {
 
     public String getCurrentPlace() {
         String fullAddress = "";
-        GoogleMap mMap = MainActivity.mGoogleMap;
-        Location myLocation = mMap.getMyLocation();
-        geocoder = new Geocoder(mContext, Locale.getDefault());
-        if (myLocation != null) {
-            double dLatitude = myLocation.getLatitude();
-            double dLongitude = myLocation.getLongitude();
-            try {
-                addresses = geocoder.getFromLocation(dLatitude, dLongitude, 1);
-                String listAddress[]=new String[4];
-                listAddress[0] = addresses.get(0).getAddressLine(0);
-                listAddress[1] = addresses.get(0).getLocality();
-                listAddress[2] = addresses.get(0).getAdminArea();
-                listAddress[3] = addresses.get(0).getCountryName();
+        try {
+            GoogleMap mMap = MainActivity.mGoogleMap;
 
-                for(int i=0;i<listAddress.length;i++)
-                {
-                    if(listAddress[i]!=null)
-                    {
-                        fullAddress = fullAddress.concat(listAddress[i]);
-                        //fullAddress += listAddress;
-                        if (i != listAddress.length - 1) {
-                            fullAddress = fullAddress.concat(", ");
+            Location myLocation = mMap.getMyLocation();
+            geocoder = new Geocoder(mContext, Locale.getDefault());
+            if (myLocation != null) {
+                double dLatitude = myLocation.getLatitude();
+                double dLongitude = myLocation.getLongitude();
+                try {
+                    addresses = geocoder.getFromLocation(dLatitude, dLongitude, 1);
+                    String listAddress[] = new String[4];
+                    listAddress[0] = addresses.get(0).getAddressLine(0);
+                    listAddress[1] = addresses.get(0).getLocality();
+                    listAddress[2] = addresses.get(0).getAdminArea();
+                    listAddress[3] = addresses.get(0).getCountryName();
+
+                    for (int i = 0; i < listAddress.length; i++) {
+                        if (listAddress[i] != null) {
+                            fullAddress = fullAddress.concat(listAddress[i]);
+                            //fullAddress += listAddress;
+                            if (i != listAddress.length - 1) {
+                                fullAddress = fullAddress.concat(", ");
+                            }
                         }
                     }
-                }
 
-            } catch (IOException e) {
-                Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
+                } catch (IOException e) {
+                    Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(mContext, "Unable to fetch the current location", Toast.LENGTH_SHORT).show();
             }
-        } else {
-            Toast.makeText(mContext, "Unable to fetch the current location", Toast.LENGTH_SHORT).show();
+        }catch (Exception e)
+        {
+            Toast.makeText(mContext, "Cannot get YourLocation", Toast.LENGTH_SHORT).show();
         }
         return fullAddress;
     }

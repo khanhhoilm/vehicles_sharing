@@ -304,8 +304,10 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
         Log.d("Token FCM", "Token Value: " + refreshedToken);
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SessionManager.PREF_NAME_LOGIN, Context.MODE_PRIVATE);
-        int userId = sharedPreferences.getInt(SessionManager.USER_ID, 3);
+        int userId = sharedPreferences.getInt(SessionManager.USER_ID, 0);
         String sessionId = sharedPreferences.getString(SessionManager.KEY_SESSION, "");
+        Log.d("User Info","User_id: "+String.valueOf(userId)+", api_token: "+String.valueOf(sessionId));
+
         final LatLng srcLatLng = PlaceHelper.getInstance(mContext).getLatLngByName(txtCurLocation.getText().toString());
         final String sourLocation = "{\"lat\":\"" + String.valueOf(srcLatLng.latitude) + "\",\"lng\":\"" + String.valueOf(srcLatLng.longitude) + "\"}";
 

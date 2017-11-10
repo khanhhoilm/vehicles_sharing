@@ -36,7 +36,7 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService {
         NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_directions_run_indigo_700_24dp)
                 .setContentTitle("Firebase Push Notification")
-               // .setContentText(message)
+                .setContentText(message)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);

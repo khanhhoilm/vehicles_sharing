@@ -45,19 +45,21 @@ public class Logout {
             @Override
             public void onResponse(Call<Status> call, Response<Status> response) {
                 Log.d("LogOut","success");
-                if (response.isSuccessful() && response.body().getError() == 0) {
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.remove(SessionManager.USER_ID);
-                    editor.remove(SessionManager.KEY_SESSION);
-                    editor.commit();
+                if (response.isSuccessful() && response.body().getError()!=null) {
+                    if(response.body().getError()==0) {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.remove(SessionManager.USER_ID);
+                        editor.remove(SessionManager.KEY_SESSION);
+                        editor.commit();
 
-                    activity.finish();
-                    fragmentManager
-                            .beginTransaction()
-                            .setCustomAnimations(R.anim.left_enter, R.anim.right_out)
-                            .replace(R.id.frameContainer, new Signin_Fragment()).commit();
+                        activity.finish();
+                        fragmentManager
+                                .beginTransaction()
+                                .setCustomAnimations(R.anim.left_enter, R.anim.right_out)
+                                .replace(R.id.frameContainer, new Signin_Fragment()).commit();
 
-                    isLogout = true;
+                        isLogout = true;
+                    }
                 }
             }
 

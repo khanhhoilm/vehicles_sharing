@@ -7,6 +7,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import vehiclessharing.vehiclessharing.model.RequestResult;
+import vehiclessharing.vehiclessharing.model.ResultSendRequest;
 import vehiclessharing.vehiclessharing.model.SignInResult;
 import vehiclessharing.vehiclessharing.model.SignUpResult;
 import vehiclessharing.vehiclessharing.model.Status;
@@ -14,7 +15,7 @@ import vehiclessharing.vehiclessharing.model.Status;
 
 public interface ApiService {
 
-   // String BASE_URL = "http://vehiclessharing.viecit.co/";
+    // String BASE_URL = "http://vehiclessharing.viecit.co/";
     String BASE_URL = "https://vehicle-sharing.herokuapp.com/";
 
     @POST("users")
@@ -31,11 +32,11 @@ public interface ApiService {
 
     @POST("users/signout")
     @FormUrlEncoded
-    Call<Status> signOut(@Field("user_id") String userId,@Field("api_token") String apiToken);
+    Call<Status> signOut(@Field("user_id") String userId, @Field("api_token") String apiToken);
 
     @POST("users//{user_id}")
     @FormUrlEncoded
-    Call<Status> updateInfoUser(@Path("user_id") String userId, @Field("api_token") String apiToken );
+    Call<Status> updateInfoUser(@Path("user_id") String userId, @Field("api_token") String apiToken);
 
     /*
      + user_id
@@ -51,18 +52,23 @@ public interface ApiService {
                                          @Query("destination_location") String desLocation, @Query("time_start") String timeStart,
                                          @Query("api_token") String session, @Query("device_id") String devideId, @Query("vehicle_type") int vehicleType);
 
-   /* @Multipart
-    @POST("api/request")
-    Call<RequestResult> registerRequest(@Part("user_id") int userId, @Part("source_location") RequestBody sourceLocation,
-                                        @Part("destination_location") RequestBody desLocation, @Part("time_start") String timeStart,
-                                        @Part("api_token") String session, @Part("device_id") String devideId, @Part("vehicle_type") int vehicleType);
-*/
+    /* @Multipart
+     @POST("api/request")
+     Call<RequestResult> registerRequest(@Part("user_id") int userId, @Part("source_location") RequestBody sourceLocation,
+                                         @Part("destination_location") RequestBody desLocation, @Part("time_start") String timeStart,
+                                         @Part("api_token") String session, @Part("device_id") String devideId, @Part("vehicle_type") int vehicleType);
+ */
     @FormUrlEncoded
     @POST("api/request")
     Call<RequestResult> registerRequest(@Field("user_id") int userId, @Field("source_location") String sourceLocation,
                                         @Field("destination_location") String desLocation, @Field("time_start") String timeStart,
                                         @Field("api_token") String session, @Field("device_id") String devideId, @Field("vehicle_type") int vehicleType,
                                         @Field("device_token") String deviceToken);
+
+
+    @FormUrlEncoded
+    @POST("api/send-request")
+    Call<ResultSendRequest> sendRequestTogether(@Field("api_token") String apiToken,@Field("receiver_id") int receiverId);
 
 
     /*

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
@@ -12,6 +13,8 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -24,6 +27,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 //import com.google.firebase.auth.FirebaseAuth;
 
@@ -47,6 +51,7 @@ import java.util.List;
 
 import io.realm.Realm;
 import co.vehiclessharing.R;
+import vehiclessharing.vehiclessharing.api.SendRequest;
 import vehiclessharing.vehiclessharing.asynctask.CustomMarkerAsync;
 import vehiclessharing.vehiclessharing.database.DatabaseHelper;
 //import vehiclessharing.vehiclessharing.database.RealmDatabase;
@@ -302,90 +307,113 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
         mGoogleMap.setOnMarkerClickListener(this);
-
-        if (mGoogleMap != null) {
-            if (checkerGPS.checkPermission())
-                mGoogleMap.setMyLocationEnabled(true);//Enable mylocation
+        /*try {
+            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        } catch (SecurityException e) {
+            dialogGPS(this.getContext()); // lets the user know there is a problem with the gps
+        }*/
+        try {
+            if (mGoogleMap != null) {
+                if (checkerGPS.checkPermission())
+                    mGoogleMap.setMyLocationEnabled(true);//Enable mylocation
            /* Location myLocation = mGoogleMap.getMyLocation();
             if(myLocation!=null) {
                 LatLng myLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
                 mGoogleMap.addMarker(new MarkerOptions().position(myLatLng).title("Bạn đang ở đây"));
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(myLatLng));
             }*/
-            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            // locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
-            Location myLocation = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-            // if(previousLocation)
-            getMyLocation(myLocation);
+                LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                // locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
+                Location myLocation = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+                // if(previousLocation)
+                getMyLocation(myLocation);
 
-            mGoogleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-                @Override
-                public void onMyLocationChange(Location location) {
-                    getMyLocation(location);
-                }
-            });
+                mGoogleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+                    @Override
+                    public void onMyLocationChange(Location location) {
+                        getMyLocation(location);
+                    }
+                });
 
-            //  mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(myLatLng));
+                //  mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(myLatLng));
 
-            //show info window when touch marker
-            mGoogleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-                @Override
-                public View getInfoWindow(Marker marker) {
-                    return null;
-                }
-
-                @Override
-                public View getInfoContents(Marker marker) {
-                    //Polyline polyline=mGoogleMap.get
-                    View v = null;
-                    // User user = new User();
-                    String who = (String) marker.getTag();
-                    if (!who.equals("here") && !who.equals("des")) {
-                        try {
-                            v = displayInfoMarkerClick(marker);
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                //show info window when touch marker
+                mGoogleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                    @Override
+                    public View getInfoWindow(Marker marker) {
+                        return null;
                     }
 
-                    return v;
-                }
-            });
-            /**
-             * When user want sent to request to another user in map. They can click in infowindow
-             * setOnInfoWindowClickListener contain dialog confirm send request to this user
-             */
-            mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                @Override
-                public void onInfoWindowClick(Marker marker) {
-                    String who = (String) marker.getTag();
-                    if (!who.equals("here") && !who.equals("des")) {
+                    @Override
+                    public View getInfoContents(Marker marker) {
+                        //Polyline polyline=mGoogleMap.get
+                        View v = null;
+                        // User user = new User();
+                        String who = (String) marker.getTag();
+                        if (!who.equals("here") && !who.equals("des")) {
+                            try {
+                                v = displayInfoMarkerClick(marker);
 
-                        AlertDialog.Builder builder;
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            builder = new AlertDialog.Builder(MainActivity.this, android.R.style.Theme_Material_Dialog_Alert);
-                        } else {
-                            builder = new AlertDialog.Builder(MainActivity.this);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
-                        builder.setTitle(getString(R.string.title_send_request))
-                                .setMessage(getString(R.string.confirm_send_request))
-                                .setPositiveButton(R.string.send_request, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        // continue with delete
-                                    }
-                                })
-                                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        // do nothing
-                                    }
-                                })
-                                .setIcon(R.drawable.ic_warning_red_600_24dp)
-                                .show();
+
+                        return v;
                     }
-                }
-            });
+                });
+                /**
+                 * When user want sent to request to another user in map. They can click in infowindow
+                 * setOnInfoWindowClickListener contain dialog confirm send request to this user
+                 */
+                mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                    @Override
+                    public void onInfoWindowClick(Marker marker) {
+                        String who = (String) marker.getTag();
+
+                        final ActiveUser userIsChosen=userHashMap.get(marker);
+
+                        if (!who.equals("here") && !who.equals("des")) {
+
+                            AlertDialog.Builder builder;
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                builder = new AlertDialog.Builder(MainActivity.this, android.R.style.Theme_Material_Dialog_Alert);
+                            } else {
+                                builder = new AlertDialog.Builder(MainActivity.this);
+                            }
+                            builder.setTitle(getString(R.string.title_send_request))
+                                    .setMessage(getString(R.string.confirm_send_request))
+                                    .setPositiveButton(R.string.send_request, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // continue with Send
+                                            SendRequest.getInstance().sendRequestTogether(dialog,MainActivity.this,sessionId,userIsChosen.getUserInfo().getId());
+                                           // SendRequest.sendRequestTogether(sessionId,userIsChosen.getUserInfo().getId());
+                                              // sendRequestToTogetherUser(userIsChosen.getUserInfo().getId());
+
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                            // do nothing
+                                        }
+                                    })
+                                    .setIcon(R.drawable.ic_warning_red_600_24dp)
+                                    .show();
+                        }
+                    }
+                });
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(this, "Check permission", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void sendRequestToTogetherUser(int userReceiveId) {
+        Log.d("User Receive","user_id user receive: "+String.valueOf(userReceiveId));
+
+        //sendẻ_id, receive_id, api_token
     }
 
     private void getMyLocation(Location myLocation) {
