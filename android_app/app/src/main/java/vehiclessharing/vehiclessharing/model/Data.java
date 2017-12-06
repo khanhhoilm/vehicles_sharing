@@ -13,7 +13,7 @@ public class Data {
     private String apiToken;
     @SerializedName("user_info")
     @Expose
-    private UserInfo userInfo;
+    private User userInfo;
 
     public String getApiToken() {
         return apiToken;
@@ -23,11 +23,11 @@ public class Data {
         this.apiToken = apiToken;
     }
 
-    public UserInfo getUserInfo() {
+    public User getUserInfo() {
         return userInfo;
     }
 
-    public void setUserInfo(UserInfo userInfo) {
+    public void setUserInfo(User userInfo) {
         this.userInfo = userInfo;
     }
 }

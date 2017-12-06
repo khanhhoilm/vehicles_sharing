@@ -7,7 +7,7 @@ package vehiclessharing.vehiclessharing.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class SignUpResult {
+public class StatusResponse {
     @SerializedName("status")
     @Expose
     private Status status;

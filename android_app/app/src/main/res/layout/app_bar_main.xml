@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".controller.activity.MainActivity">
+    tools:context="vehiclessharing.vehiclessharing.controller.activity.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -25,10 +25,10 @@
 
 
     <FrameLayout
+        android:id="@+id/frameContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior"
-        android:id="@+id/frameContainer">
+        app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior">
 
     </FrameLayout>
 
@@ -39,19 +39,20 @@
         android:layout_gravity="bottom|start"
         android:layout_margin="@dimen/fab_margin"
         android:visibility="visible"
-       app:backgroundTint="@color/colorPrimaryDark"
+        app:backgroundTint="@color/colorPrimary"
         app:srcCompat="@drawable/ic_directions_car_white_24dp" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/btnCancelRequest"
         android:layout_width="106dp"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
         android:layout_margin="@dimen/fab_margin"
+        android:tint="@color/white"
         android:visibility="gone"
         app:backgroundTint="@color/button_google"
-        android:tint="@color/white"
-        app:srcCompat="@drawable/ic_clear_red_a700_24dp"
-        />
+        app:srcCompat="@drawable/ic_clear_red_a700_24dp" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/btnRestartRequest"
         android:layout_width="106dp"
@@ -59,8 +60,8 @@
         android:layout_gravity="bottom|start"
         android:layout_margin="@dimen/fab_margin"
         android:visibility="gone"
-        app:srcCompat="@drawable/ic_reply_green_600_24dp"
-        />
+        app:srcCompat="@drawable/ic_reply_green_600_24dp" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/btnFindPeople"
         android:layout_width="wrap_content"
@@ -68,7 +69,20 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:visibility="visible"
-        app:backgroundTint="@color/colorPrimaryDark"
+        app:backgroundTint="@color/colorPrimary"
         app:srcCompat="@drawable/ic_directions_run_white_24dp" />
 
+    <FrameLayout
+        android:id="@+id/frameContainerMarker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:visibility="gone">
+
+        <include
+            layout="@layout/info_marker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </FrameLayout>
 </android.support.design.widget.CoordinatorLayout>

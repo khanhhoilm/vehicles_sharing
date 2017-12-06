@@ -1,21 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#00A4E5</color>
-    <color name="colorPrimaryDark">#1987B2</color>
+    <color name="colorPrimary">#00BCD4</color>
+    <color name="colorPrimaryDark">#0FA3B5</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="background_color">#2980b9</color>
+    <color name="background_color">#03A9F4</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="white_greyish">#EEEEEE</color>
-    <color name="button_selectorcolor">#9E9E9E</color>
+    <color name="editTextColor">#E5E9E9</color>
+    <color name="button_selectorcolor">#ABB7B7</color>
     <color name="button_google">#e74c3c</color>
+    <color name="textEditBoxColor">#333333</color>
     <color name="colortextprofile">#7f8c8d</color>
     <color name="backgroud_bottom_profile">#ecf0f1</color>
     <color name="yellow">#f1c40f</color>
+
     <color name="button_edit_profile">#3498db</color>
     <color name="color_line_field">#34495e</color>
     <color name="background_nav_header">#ff8533</color>
     <color name="text_color">#000000</color>
     <color name="star_color">#E98E2D</color>
-    <color name="edit_profile_icon">#F57C00</color>
+    <color name="edit_profile_icon">#e67e22</color>
+    <color name="backgroundSignInColor">#ECFAFB</color>
+    <color name="backgroundRecycleImage">#eff2f5</color>
 </resources>

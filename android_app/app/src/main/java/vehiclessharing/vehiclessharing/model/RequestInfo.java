@@ -1,5 +1,6 @@
 package vehiclessharing.vehiclessharing.model;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -20,6 +21,16 @@ public class RequestInfo {
     @SerializedName("time_start")
     @Expose
     private String timeStart;
+
+    private int userId;
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
     public Integer getVehicleType() {
         return vehicleType;
@@ -52,5 +63,6 @@ public class RequestInfo {
     public void setTimeStart(String timeStart) {
         this.timeStart = timeStart;
     }
+
 
 }

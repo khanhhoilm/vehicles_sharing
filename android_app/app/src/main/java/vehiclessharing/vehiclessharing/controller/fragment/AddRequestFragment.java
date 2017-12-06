@@ -1,5 +1,6 @@
 package vehiclessharing.vehiclessharing.controller.fragment;
 
+import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,23 +44,23 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
+import co.vehiclessharing.R;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import co.vehiclessharing.R;
 import vehiclessharing.vehiclessharing.adapter.PlaceAutocompleteAdapter;
 import vehiclessharing.vehiclessharing.adapter.SpinerVehicleTypeAdapter;
+import vehiclessharing.vehiclessharing.api.RelateRequestAPI;
 import vehiclessharing.vehiclessharing.api.RestManager;
+import vehiclessharing.vehiclessharing.authentication.SessionManager;
 import vehiclessharing.vehiclessharing.model.ActiveUser;
 import vehiclessharing.vehiclessharing.model.RequestResult;
-import vehiclessharing.vehiclessharing.authentication.SessionManager;
-//import vehiclessharing.vehiclessharing.push.CustomFirebaseInstanceIDService;
-import vehiclessharing.vehiclessharing.push.CustomFirebaseInstanceIDService;
 import vehiclessharing.vehiclessharing.utils.PlaceHelper;
+
+//import vehiclessharing.vehiclessharing.push.CustomFirebaseInstanceIDService;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -73,7 +75,6 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String WHAT_BTN_CLICK = "what_btn_click";
     private String getWhatBtnClick = "";
-    private View view;
     private TextView txtTitle, txtTimeStart;
 
     private Button btnOk, btnCancel;
@@ -84,6 +85,9 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
     private PlaceAutocompleteAdapter mAdapter;
     private int CUR_PLACE_AUTOCOMPLETE_REQUEST_CODE = 0;
     private int DES_PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+    private RelateRequestAPI.CancelRequestCallBack cancelRequestCallBack;
+    private int userId;
+    private String sessionId="",refreshedToken="";
     //private AutoCompleteTextView mAutocompleteCurLocation,mAutocompleteDesLocation;
 
     private Context mContext;
@@ -140,45 +144,32 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
                     .addApi(Places.GEO_DATA_API)
                     .build();
         }
-        view = inflater.inflate(R.layout.fragment_add_request, container, false);
+        View view = inflater.inflate(R.layout.fragment_add_request, container, false);
 
-        addControls();
+        addControls(view);
 
         // Inflate the layout for this fragment
         return view;
     }
 
-    private void addControls() {
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        // request a window without the title
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        return dialog;
+    }
+
+    private void addControls(View view) {
         mContext = getActivity();
         txtTitle = (TextView) view.findViewById(R.id.txtNeederDialogTitle);
-
-        switch (getWhatBtnClick) {
-            case "btnFindPeople":
-                // vehicleType=spType.getSelectedItemPosition()+1;
-                txtTitle.setText(mContext.getResources().getString(R.string.dialog_find_people));
-                break;
-            case "btnFindVehicles":
-                // vehicleType=0;
-                txtTitle.setText(mContext.getResources().getString(R.string.dialog_find_vehicle));
-
-        }
-       /* if (getWhatBtnClick.equals("btnFindPeople")) {
-
-        }
-        if(getWhatBtnClick.equals("btnFindVehicles"))
-        {
-
-        }*/
 
         txtCurLocation = (EditText) view.findViewById(R.id.txtCurLocate);
         txtDesLocation = (EditText) view.findViewById(R.id.txtDesLocate);
         txtCurLocation.setOnClickListener(this);
         txtDesLocation.setOnClickListener(this);
-      /* mAutocompleteCurLocation= (AutoCompleteTextView) view.findViewById(R.id.autocomplete_cur_places);
-        mAutocompleteDesLocation= (AutoCompleteTextView) view.findViewById(R.id.autocomplete_des_places);
-*/
-        // Register a listener that receives callbacks when a suggestion has been selected
-        //mAutocompleteCurLocation.setOnItemClickListener(mAutocompleteClickListener);
 
         txtTimeStart = (TextView) view.findViewById(R.id.txtTimeStart);
         btnOk = (Button) view.findViewById(R.id.btnAddOK);
@@ -207,13 +198,23 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
         type.add("Ô tô");
         adapter = new SpinerVehicleTypeAdapter(mContext, type);
         spType.setAdapter(adapter);
+        switch (getWhatBtnClick) {
+            case "btnFindPeople":
+                // vehicleType=spType.getSelectedItemPosition()+1;
+
+                txtTitle.setText(mContext.getResources().getString(R.string.dialog_find_people));
+                spType.setVisibility(View.VISIBLE);
+                break;
+            case "btnFindVehicles":
+                // vehicleType=0;
+                txtTitle.setText(mContext.getResources().getString(R.string.dialog_find_vehicle));
+                spType.setVisibility(View.GONE);
+
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
-      /* if (mListener != null) {
-            mListener.addRequestResult();
-        }*/
     }
 
     @Override
@@ -225,6 +226,15 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+
+        refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        Log.d("Token FCM", "Token Value: " + refreshedToken);
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SessionManager.PREF_NAME_LOGIN, Context.MODE_PRIVATE);
+        userId = sharedPreferences.getInt(SessionManager.USER_ID, 0);
+        sessionId = sharedPreferences.getString(SessionManager.KEY_SESSION, "");
+        Log.d("User Info", "User_id: " + String.valueOf(userId) + ", api_token: " + String.valueOf(sessionId));
+
     }
 
     @Override
@@ -300,13 +310,6 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
                 //  txtTitle.setText(mContext.getResources().getString(R.string.dialog_find_vehicle));
 
         }
-        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d("Token FCM", "Token Value: " + refreshedToken);
-
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SessionManager.PREF_NAME_LOGIN, Context.MODE_PRIVATE);
-        int userId = sharedPreferences.getInt(SessionManager.USER_ID, 0);
-        String sessionId = sharedPreferences.getString(SessionManager.KEY_SESSION, "");
-        Log.d("User Info","User_id: "+String.valueOf(userId)+", api_token: "+String.valueOf(sessionId));
 
         final LatLng srcLatLng = PlaceHelper.getInstance(mContext).getLatLngByName(txtCurLocation.getText().toString());
         final String sourLocation = "{\"lat\":\"" + String.valueOf(srcLatLng.latitude) + "\",\"lng\":\"" + String.valueOf(srcLatLng.longitude) + "\"}";
@@ -317,81 +320,39 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
         final String time = txtTimeStart.getText().toString();
         String deviceId = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
         String deviceToken = FirebaseInstanceId.getInstance().getToken();
-        SharedPreferences preferencesGetTokenDevice=getActivity().getSharedPreferences(CustomFirebaseInstanceIDService.DEVICE_TOKEN_REFRESH,Context.MODE_PRIVATE);
 
-
-       String tokenFCM=preferencesGetTokenDevice.getString(CustomFirebaseInstanceIDService.DEVICE_TOKEN,"");
         Log.d("Token FCM", "Token Value: " + deviceToken);
-        Log.d("Token from sharepre","Token"+tokenFCM);
-        // /   Log.d(TAG, "Token Value: " + refreshedToken);
-      // mListener.addRequestSuccess(srcLatLng,desLatLng,time,vehicleType);
-
-        // vehicleType=spType.getSelectedItemPosition()+1;
-        //callback b/c some reasom about network or anything not right
-        //   mListener.addRequestResult(,,txtTimeStart.getText());
-        //callback to true if add request success
-/*
-* @Query("user_id") int userId, @Query("source_location") String sourceLocation,
-                                         @Query("destination_location") String desLocation, @Query("time_start") String timeStart,
-                                         @Query("api_token") String session, @Query("device_id") String devideId, @Query("vehicle_type") int vehicleType);
-*/
+        Log.d("DeviceId", "Device Id Value: " + deviceId);
 
 
-        /*RequestBody formBody = new FormBody.Builder()
-                .add("user_id", String.valueOf(userId))
-                .add("source_location", sourLocation)
-                .add("destination_location", sourLocation)
-                .add("time_start", sourLocation)
-                .add("api_token", deviceToken)
-                .add("device_id", deviceId)
-                .add("vehicle_type",String.valueOf(vehicleType))
-                .build();
-*/
-      /*  mManager.getApiService().registerRequest(formBody).enqueue(new Callback<RequestResult>() {
+        mManager.getApiService().registerRequest(userId, sourLocation, desLocation, time, sessionId, deviceId, vehicleType, deviceToken).enqueue(new Callback<RequestResult>() {
             @Override
             public void onResponse(Call<RequestResult> call, Response<RequestResult> response) {
-                if (response.isSuccessful()) {
-                    mListener.addRequestSuccess(srcLatLng, desLatLng, time, vehicleType,response.body().getActiveUsers());
-                    dismiss();
-                }else
-                {
-                    Toast.makeText(mContext, mContext.getString(R.string.no_internet), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RequestResult> call, Throwable t) {
-                Toast.makeText(mContext, mContext.getString(R.string.no_internet), Toast.LENGTH_SHORT).show();
-
-            }
-        });
-*/
-        mManager.getApiService().registerRequest(userId, sourLocation, desLocation, time, sessionId, deviceId, vehicleType,deviceToken).enqueue(new Callback<RequestResult>() {
-            @Override
-            public void onResponse(Call<RequestResult> call, Response<RequestResult> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body().getStatus().getError() == 0) {
+                    Log.d("registerRequest","registerRequest success");
                     List<ActiveUser> activeUserList = new ArrayList<ActiveUser>();
-                    if (response.body().getActiveUsers().size() > 0) {
-                        activeUserList = response.body().getActiveUsers();
-                        //mListener.addRequestSuccess(srcLatLng, desLatLng, time, vehicleType, response.body().getActiveUsers());
-                    }/*else {
-                        mListener.addRequestSuccess(srcLatLng, desLatLng, time, vehicleType,
-                     */
-                    mListener.addRequestSuccess(srcLatLng, desLatLng, time, vehicleType, activeUserList);
-                    dismiss();
+                    //cancelRequestCallBack.addRequestSuccessful(sourLocation, desLocation, time, vehicleType, response.body().getActiveUsers());
+
+                    mListener.addRequestSuccess(srcLatLng, desLatLng, time, vehicleType, response.body().getActiveUsers());
+                    if (isAdded()) {
+                        dismiss();
+                    }
                 } else {
-                    Toast.makeText(mContext, mContext.getString(R.string.no_internet), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, getString(R.string.add_request_fail), Toast.LENGTH_SHORT).show();
                 }
+
             }
 
             @Override
             public void onFailure(Call<RequestResult> call, Throwable t) {
-                // mListener.addRequestSuccess(srcLatLng,desLatLng,time,vehicleType);
-                //  dismiss();
-                Toast.makeText(mContext, mContext.getString(R.string.no_internet), Toast.LENGTH_SHORT).show();
-
+                if(isAdded()) {
+                    Toast.makeText(mContext, getString(R.string.add_request_fail), Toast.LENGTH_SHORT).show();
+                }
             }
         });
+
+        //}
+        //  RelateRequestAPI.getInstance(this).addRequest(userId, sourLocation, desLocation, time, sessionId, deviceId, vehicleType,deviceToken );
     }
 
     private void showTimePicker() {
@@ -541,10 +502,13 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
 
     }
 
+
     public interface OnFragmentAddRequestListener {
         // TODO: Update argument type and name
         void addRequestSuccess(LatLng cur, LatLng des, String time, int type, List<ActiveUser> list);
 
         void addRequestFailure();
+
+        void cancelRequestSuccess(boolean success);
     }
 }

@@ -1,6 +1,8 @@
 package vehiclessharing.vehiclessharing.api;
 
 
+import android.icu.util.TimeUnit;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -19,7 +21,10 @@ public class RestManager {
 
     public static ApiService getApiService() {
         Gson gson = new GsonBuilder().create();
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
+                .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+                .writeTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+                .readTimeout(30, java.util.concurrent.TimeUnit.SECONDS);
         httpClient.addInterceptor(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
@@ -27,6 +32,7 @@ public class RestManager {
                 okhttp3.Request original = chain.request();
 
                 okhttp3.Request request = original.newBuilder()
+
                        // .header("User-Agent",headerClient)
                         .method(original.method(), original.body())
                         .build();

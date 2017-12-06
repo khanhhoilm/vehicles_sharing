@@ -3,6 +3,7 @@ package vehiclessharing.vehiclessharing.controller.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -45,12 +46,14 @@ public class SigninActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         //set up notitle
        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
 
 //        //set up full screen
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+       /* getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+*/
         setContentView(R.layout.activity_signin);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//DO NOT ROTATE the screen even if the user is shaking his phone like mad
 
@@ -140,6 +143,7 @@ public class SigninActivity extends AppCompatActivity implements View.OnClickLis
         // If both are not null then replace login fragment else do backpressed
         // task
 
+        finishAffinity();
         if (SignUp_Fragment != null)
             replaceLoginFragment();
         else if (ForgotPassword_Fragment != null)

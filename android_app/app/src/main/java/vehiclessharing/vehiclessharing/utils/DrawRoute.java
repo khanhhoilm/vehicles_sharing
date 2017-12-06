@@ -114,7 +114,9 @@ public class DrawRoute implements RoutingListener {
 
                 polyOptions.width(10 + i * 3);
                 polyOptions.addAll(arrayList.get(i).getPoints());
+
                 polyline = MainActivity.mGoogleMap.addPolyline(polyOptions);
+                polyline.setTag(mSubject);
                 //if (mSubject != 0) {
                     MainActivity.polylineList.add(mSubject,polyline);
 

@@ -3,14 +3,14 @@ package vehiclessharing.vehiclessharing.api;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
 import vehiclessharing.vehiclessharing.model.RequestResult;
 import vehiclessharing.vehiclessharing.model.ResultSendRequest;
 import vehiclessharing.vehiclessharing.model.SignInResult;
-import vehiclessharing.vehiclessharing.model.SignUpResult;
-import vehiclessharing.vehiclessharing.model.Status;
+import vehiclessharing.vehiclessharing.model.StartStripResponse;
+import vehiclessharing.vehiclessharing.model.StatusResponse;
+import vehiclessharing.vehiclessharing.model.UserInfo;
 
 
 public interface ApiService {
@@ -18,12 +18,12 @@ public interface ApiService {
     // String BASE_URL = "http://vehiclessharing.viecit.co/";
     String BASE_URL = "https://vehicle-sharing.herokuapp.com/";
 
-    @POST("users")
+    @POST("users/register")
     @FormUrlEncoded
-    Call<SignUpResult> signUp(@Field("phone") String phone,
-                              @Field("name") String name,
-                              @Field("password") String password,
-                              @Field("gender") int gender);
+    Call<StatusResponse> signUp(@Field("phone") String phone,
+                                @Field("name") String name,
+                                @Field("password") String password,
+                                @Field("gender") int gender);
 
     @POST("users/signin")
     @FormUrlEncoded
@@ -32,33 +32,16 @@ public interface ApiService {
 
     @POST("users/signout")
     @FormUrlEncoded
-    Call<Status> signOut(@Field("user_id") String userId, @Field("api_token") String apiToken);
+    Call<StatusResponse> signOut(@Field("api_token") String apiToken);
 
-    @POST("users//{user_id}")
+    @POST("users/update")
     @FormUrlEncoded
-    Call<Status> updateInfoUser(@Path("user_id") String userId, @Field("api_token") String apiToken);
+    Call<StatusResponse> updateInfoUser(@Field("api_token") String apiToken, @Field("name") String name, @Field("email") String email,
+                                        @Field("avatar_link") String avatarLink, @Field("password") String password, @Field("gender") int gender,
+                                        @Field("address") String address, @Field("birthday") String birthday);
 
-    /*
-     + user_id
- + source_location (lat - long )
- + destination_location ( lat-long )
- + time_start
- + api_token
- + device_id
-+ vehicle_type
-    */
-    @POST("api/request")
-    Call<RequestResult> registerARequest(@Query("user_id") int userId, @Query("source_location") String sourceLocation,
-                                         @Query("destination_location") String desLocation, @Query("time_start") String timeStart,
-                                         @Query("api_token") String session, @Query("device_id") String devideId, @Query("vehicle_type") int vehicleType);
-
-    /* @Multipart
-     @POST("api/request")
-     Call<RequestResult> registerRequest(@Part("user_id") int userId, @Part("source_location") RequestBody sourceLocation,
-                                         @Part("destination_location") RequestBody desLocation, @Part("time_start") String timeStart,
-                                         @Part("api_token") String session, @Part("device_id") String devideId, @Part("vehicle_type") int vehicleType);
- */
     @FormUrlEncoded
+    @Headers("Accept: application/json")
     @POST("api/request")
     Call<RequestResult> registerRequest(@Field("user_id") int userId, @Field("source_location") String sourceLocation,
                                         @Field("destination_location") String desLocation, @Field("time_start") String timeStart,
@@ -67,35 +50,52 @@ public interface ApiService {
 
 
     @FormUrlEncoded
+    @Headers("Accept: application/json")
     @POST("api/send-request")
-    Call<ResultSendRequest> sendRequestTogether(@Field("api_token") String apiToken,@Field("receiver_id") int receiverId);
+    Call<ResultSendRequest> sendRequestTogether(@Field("api_token") String apiToken, @Field("receiver_id") int receiverId, @Field("note") String note);
 
+    @FormUrlEncoded
+    @POST("api/cancel-request")
+    Call<StatusResponse> cancelRequest(@Field("api_token") String apiToken);
 
-    /*
-* ultipart
-@POST("/api/v2/search_bounds")
-void search_bounds(@Part("bounds") ArrayList<Bounds> bounds, @Part("filters") SearchCriteria searchCriteria, Callback<SearchResults> cb);
-and
-*/
+    @FormUrlEncoded
+    @POST("api/confirm-request")
+    Call<StatusResponse> confirmRequest(@Field("api_token") String apiToken, @Field("sender_id") int senderId, @Field("confirm_id") int confirmId);
 
-   /*For now i created my own FormBody.Builder like i said before
-https://github.com/square/retrofit/issues/1407
- @POST(LOGIN_URL)
- Call<BaseResponse> loginUser(@Body RequestBody body);
- RequestBody formBody = new FormBody.Builder()
-                .add(EMAIL, emailId.getText().toString())
-                .add(PASSWORD, password.getText().toString())
-                .build();
+    @FormUrlEncoded
+    @POST("api/start-the-trip")
+    Call<StartStripResponse> startTheTrip(@Field("api_token") String apiToken);
 
- Call<BaseResponse> loginCall = RetorfitService.service.loginUser(formBody);*/
-    /*@GET("/appdev/catpage?token=dee03981&cid=2&limit=10&page=1")
-    Call<List<ItemCategory>> getItemByCategory();
+    @FormUrlEncoded
+    @POST("users/show")
+    Call<UserInfo> getUserInfo(@Field("api_token") String apiToken, @Field("user_id") int userId);
 
-    @GET("/appdev/catpage?token=dee03981")
-    Call<List<ItemCategory>> getItemByCategoryDynamic(@Query("cid") int cid, @Query("limit") int limit, @Query("page") int page, @Query("prior") int prior);
+    /*{
+    "status": {
+        "error": 0,
+        "message": "Success"
+    },
+    "rating_info": {
+        "total_rating": 3,
+        "user_info": {
+            "id": 1,
+            "phone": "0939267597",
+            "name": "Hội Khánh",
+            "email": null,
+            "google_id": null,
+            "facebook_id": null,
+            "avatar_link": null,
+            "gender": 1,
+            "address": null,
+            "birthday": null
+        }
+    }
+}*/
 
-    @GET("/appdev/getobjectdetail?token=dee03981")
-    Call<ItemDetail> getArticleDetail(@Query("id") String id);*/
+    @FormUrlEncoded
+    @POST
+    Call<StatusResponse> ratingUserTogether(@Field("api_token") String apiToken, @Field("journey_id") int journeyId,
+                                            @Field("rating_value") int ratingValue, @Field("comment") String comment);
 
 
 }

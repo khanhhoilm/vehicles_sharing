@@ -15,6 +15,14 @@ public class LatLngLocation {
     @Expose
     private String lng;
 
+    public LatLngLocation() {
+    }
+
+    public LatLngLocation(String lat, String lng) {
+        this.lat = lat;
+        this.lng = lng;
+    }
+
     public String getLat() {
         return lat;
     }
@@ -29,5 +37,15 @@ public class LatLngLocation {
 
     public void setLng(String lng) {
         this.lng = lng;
+    }
+
+    public String convertLatLngToStringToDatabase()
+    {
+        return this.lat+";"+this.lng;
+    }
+    public static LatLngLocation convertStringFromDatabaseToLatLng(String latLng)
+    {
+        String latLngLocation[]=latLng.split(";");
+        return new LatLngLocation(latLngLocation[0],latLngLocation[1]);
     }
 }

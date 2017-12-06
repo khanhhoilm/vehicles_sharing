@@ -12,47 +12,48 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/backgroundRecycleImage"
+            android:layout_marginBottom="10dp">
             <FrameLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/img_user"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/temp"
-                    app:civ_border_color="#95a5a6" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+
+                    app:civ_border_color="@color/backgroundRecycleImage"
+                    app:civ_fill_color="@color/backgroundRecycleImage"
+
+                    android:src="@drawable/temp" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|right"
-                    android:layout_marginBottom="7dp"
+                    android:layout_height="wrap_content"                    android:layout_marginBottom="7dp"
                     android:layout_marginRight="7dp"
-                    android:src="@drawable/ic_photo_camera_orange_700_24dp"
-                    app:civ_border_color="#95a5a6"
-                    app:civ_border_width="1dp"
-                    app:civ_fill_color="@color/white" />
-            </FrameLayout>
+                    android:layout_gravity="bottom|right"
+                    android:src="@drawable/ic_photo_camera_white_36dp"
+                    app:civ_border_color="@color/colorPrimary"
+                    app:civ_border_width="8dp"
 
-            <ProgressBar
-                android:id="@+id/loading_progress_img"
-                style="?android:attr/progress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:visibility="visible" />
+                    android:layout_toRightOf="@id/img_user"
+
+                    app:civ_fill_color="@color/colorPrimary" />
+            </FrameLayout>
         </RelativeLayout>
 
 
         <LinearLayout
+            android:id="@+id/lnInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -62,15 +63,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
+                    android:layout_centerVertical="true"
                     android:layout_gravity="center"
                     android:padding="3dp"
+                    android:tint="@color/colorPrimaryDark"
                     android:src="@drawable/ic_contact_phone_orange_700_24dp" />
 
                 <EditText
@@ -78,15 +81,44 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:editable="false"
+                    android:enabled="false"
                     android:paddingBottom="@dimen/margin_edit_profile"
+                    android:paddingLeft="30dp"
                     android:paddingRight="@dimen/margin_5_dp"
                     android:paddingTop="@dimen/margin_edit_profile" />
-            </LinearLayout>
-                <RadioGroup
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:padding="3dp"
+                    android:tint="@color/colorPrimaryDark"
+                    android:src="@drawable/ic_email_orange_700_24dp" />
+
+                <EditText
+                    android:id="@+id/txtEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <RadioButton
+                    android:editable="false"
+                    android:paddingBottom="@dimen/margin_edit_profile"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="@dimen/margin_5_dp"
+                    android:paddingTop="@dimen/margin_edit_profile" />
+            </RelativeLayout>
+
+            <RadioGroup
+                android:id="@+id/rdgGender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
                     android:id="@+id/rd_male"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -103,8 +135,7 @@
                     android:checked="false"
                     android:focusable="false"
                     android:text="@string/female" />
-                </RadioGroup>
-
+            </RadioGroup>
 
             <View
                 android:layout_width="fill_parent"
@@ -114,7 +145,7 @@
                 android:background="@color/color_line_field" />
 
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -122,20 +153,22 @@
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
+                    android:layout_centerVertical="true"
                     android:layout_gravity="center"
                     android:padding="3dp"
                     android:src="@drawable/birthday_cake"
-                    android:tint="@color/edit_profile_icon" />
+                    android:tint="@color/colorPrimaryDark" />
 
                 <TextView
                     android:id="@+id/txt_birthday"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="@dimen/margin_edit_profile"
+                    android:paddingLeft="30dp"
                     android:paddingRight="@dimen/margin_5_dp"
                     android:paddingTop="@dimen/margin_edit_profile"
                     android:textColor="@color/black" />
-            </LinearLayout>
+            </RelativeLayout>
 
             <View
                 android:layout_width="fill_parent"
@@ -144,17 +177,17 @@
                 android:layout_marginRight="@dimen/margin_5_dp"
                 android:background="@color/color_line_field" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:layout_gravity="center"
+                    android:layout_centerVertical="true"
                     android:padding="3dp"
                     android:src="@drawable/ic_home_blue_grey_600_24dp"
-                    android:tint="@color/edit_profile_icon" />
+                    android:tint="@color/colorPrimaryDark" />
 
                 <EditText
                     android:id="@+id/ed_address"
@@ -162,10 +195,34 @@
                     android:layout_height="wrap_content"
                     android:focusable="false"
                     android:paddingBottom="@dimen/margin_edit_profile"
+                    android:paddingLeft="30dp"
                     android:paddingRight="@dimen/margin_5_dp"
                     android:paddingTop="@dimen/margin_edit_profile" />
-            </LinearLayout>
+            </RelativeLayout>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:padding="3dp"
+                    android:src="@drawable/ic_lock_outline_white_24dp"
+                    android:tint="@color/colorPrimaryDark" />
+
+                <EditText
+                    android:id="@+id/txtPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:paddingBottom="@dimen/margin_edit_profile"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="@dimen/margin_5_dp"
+                    android:paddingTop="@dimen/margin_edit_profile" />
+            </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
 
@@ -174,10 +231,11 @@
         android:layout_width="200dp"
         android:layout_height="40dp"
         android:layout_gravity="center"
-        android:alpha="1"
+        android:alpha="0.2"
         android:background="@drawable/custom_button_save_info"
         android:text="@string/update_profile"
         android:textColor="@color/white"
+        android:textStyle="bold"
         android:visibility="visible" />
 
 </LinearLayout>

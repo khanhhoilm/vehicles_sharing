@@ -10,16 +10,16 @@ import com.google.gson.annotations.SerializedName;
 public class ActiveUser {
     @SerializedName("user_info")
     @Expose
-    private UserInfo userInfo;
+    private User userInfo;
     @SerializedName("request_info")
     @Expose
     private RequestInfo requestInfo;
 
-    public UserInfo getUserInfo() {
+    public User getUserInfo() {
         return userInfo;
     }
 
-    public void setUserInfo(UserInfo userInfo) {
+    public void setUserInfo(User userInfo) {
         this.userInfo = userInfo;
     }
 

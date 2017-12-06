@@ -2,8 +2,6 @@ package vehiclessharing.vehiclessharing.controller.fragment;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.res.ColorStateList;
-import android.content.res.XmlResourceParser;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,18 +17,16 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 
 import retrofit2.Callback;
 
 import co.vehiclessharing.R;
 import vehiclessharing.vehiclessharing.constant.Utils;
 import vehiclessharing.vehiclessharing.api.RestManager;
+import vehiclessharing.vehiclessharing.utils.HashAlgorithm;
 import vehiclessharing.vehiclessharing.viewscustom.CustomToast;
 import vehiclessharing.vehiclessharing.database.DatabaseHelper;
-import vehiclessharing.vehiclessharing.model.SignUpResult;
+import vehiclessharing.vehiclessharing.model.StatusResponse;
 import vehiclessharing.vehiclessharing.model.Validation;
 
 
@@ -103,7 +99,7 @@ public class SignUp_Fragment extends Fragment implements View.OnClickListener {
         mDrawable.setBounds(0, 0, mDrawable.getIntrinsicWidth(), mDrawable.getIntrinsicHeight());
 
         // Setting text selector over textviews
-        XmlResourceParser xrp = getResources().getXml(R.drawable.text_selector);
+       /* XmlResourceParser xrp = getResources().getXml(R.drawable.text_selector);
         try {
             ColorStateList csl = ColorStateList.createFromXml(getResources(),
                     xrp);
@@ -111,7 +107,7 @@ public class SignUp_Fragment extends Fragment implements View.OnClickListener {
             login.setTextColor(csl);
             //  terms_conditions.setTextColor(csl);
         } catch (Exception e) {
-        }
+        }*/
     }
 
     /**
@@ -267,13 +263,13 @@ public class SignUp_Fragment extends Fragment implements View.OnClickListener {
                         // Log.d("Validate signup","password = "+password);
                         //Create new account call api
                         // signUp();
-                        password = md5(password);
-                        mManager.getApiService().signUp(mobilePhone, fullName, password, gender).enqueue(new Callback<SignUpResult>() {
+                        password = HashAlgorithm.md5(password);
+                        mManager.getApiService().signUp(mobilePhone, fullName, password, gender).enqueue(new Callback<StatusResponse>() {
                             @Override
-                            public void onResponse(retrofit2.Call<SignUpResult> call, retrofit2.Response<SignUpResult> response) {
+                            public void onResponse(retrofit2.Call<StatusResponse> call, retrofit2.Response<StatusResponse> response) {
                                 JSONObject s = null;
                                 if (response.isSuccessful()) {
-                                    SignUpResult responseBody = response.body();
+                                    StatusResponse responseBody = response.body();
 
                                     //  s = new JSONObject(response.body().);
                                     switch (responseBody.getStatus().getError()) {
@@ -297,7 +293,7 @@ public class SignUp_Fragment extends Fragment implements View.OnClickListener {
                             }
 
                             @Override
-                            public void onFailure(retrofit2.Call<SignUpResult> call, Throwable t) {
+                            public void onFailure(retrofit2.Call<StatusResponse> call, Throwable t) {
                                 mProgress.dismiss();
                                 Toast.makeText(mActivity, mActivity.getResources().getString(R.string.no_internet), Toast.LENGTH_SHORT).show();
 
@@ -311,87 +307,5 @@ public class SignUp_Fragment extends Fragment implements View.OnClickListener {
 
     }
 
-
-   /*
-     * Storage profile's user into both Firebase Database and SQLite
-     *
-     * @param userId   - userid
-     * @param email    - user's email
-     * @param image    - user's url image
-     * @param fullname - user's fullname
-     * @param phone    - user's phoneNumber
-     * @param sex      - user's sex
-     * @param address  - user's address
-     */
-
-    /*private void writeNewUser(String userId, String email, String image, String fullname, String phone,
-                              String sex, UserAddress address, BirthDay birthDay) {
-        User user = new User(email, image, fullname, phone, sex, address, birthDay);
-        //[START]Storage in Firebase Database
-       *//* mDatabase.child("users").child(userId).setValue(user);
-
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(fullname)
-                .build();*//*
-      *//*  mUser.updateProfile(profileUpdates)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "User profile updated.");
-                        }
-                    }
-                });*//*
-    }*/
-/*
-    @Override
-    public void register(String message) {
-
-    }*/
-
-    /* @Override
-     public void registerSentResult(String message) {
-         Log.d("SignUp", message);
-         mProgress.dismiss();
-         getFragmentManager()
-                 .beginTransaction()
-                 .setCustomAnimations(R.anim.left_enter, R.anim.right_out)
-                 .replace(R.id.frameContainer, new Login_Fragment()).commit();
-
-     }
-
-     @Override
-     public void signInResult(String message) {
-
-     }
-
-     @Override
-     public void errorEncountered(String message) {
-
-     }*/
-    public static final String md5(final String s) {
-        final String MD5 = "MD5";
-        try {
-            // Create MD5 Hash
-            MessageDigest digest = java.security.MessageDigest
-                    .getInstance(MD5);
-            digest.update(s.getBytes());
-            byte messageDigest[] = digest.digest();
-
-            // Create Hex String
-            StringBuilder hexString = new StringBuilder();
-            for (byte aMessageDigest : messageDigest) {
-                String h = Integer.toHexString(0xFF & aMessageDigest);
-                while (h.length() < 2)
-                    h = "0" + h;
-                hexString.append(h);
-            }
-            return hexString.toString();
-
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
 }
 

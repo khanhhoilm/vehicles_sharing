@@ -1,65 +1,75 @@
 package vehiclessharing.vehiclessharing.model;
 
 /**
- * Created by Tuan on 13/03/2017.
+ * Created by Hihihehe on 9/27/2017.
  */
+import android.graphics.Bitmap;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class User {
 
+    @SerializedName("id")
+    @Expose
+    private Integer id;
+    @SerializedName("name")
+    @Expose
+    private String name;
+    @SerializedName("phone")
+    @Expose
+    private String phone;
+    @SerializedName("email")
+    @Expose
     private String email;
-    private String image;
-    private String fullName;
-    private String phoneNumber;
-    private String sex;
-    private UserAddress address;
-    private BirthDay birthDay;
+    @SerializedName("avatar_link")
+    @Expose
+    private String avatarLink;
+    @SerializedName("gender")
+    @Expose
+    private Integer gender;
+    @SerializedName("address")
+    @Expose
+    private String address;
+    @SerializedName("birthday")
+    @Expose
+    private String birthday;
+
+    private Bitmap picture;
+
+    public Bitmap getPicture() {
+        return picture;
+    }
+
+    public void setPicture(Bitmap picture) {
+        this.picture = picture;
+    }
 
     public User() {
     }
 
-    /**
-     * Contructor
-     * @param email - user's email
-     * @param image - user's url image
-     * @param fullName - user's fullname
-     * @param phoneNumber - user's phoneNumber
-     * @param sex - user's sex
-     * @param address - user's address
-     * @param  birthDay- user's birthday
-     */
-    public User(String email, String image, String fullName, String phoneNumber, String sex, UserAddress address, BirthDay birthDay) {
-        this.email = email;
-        this.image = image;
-        this.fullName = fullName;
-        this.phoneNumber = phoneNumber;
-        this.sex = sex;
-        this.address = address;
-        this.birthDay = birthDay;
+    public Integer getId() {
+        return id;
     }
 
-
-    public String getImage() {
-        return image;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public String getName() {
+        return name;
     }
 
-    public String getFullName() {
-        return fullName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public String getPhone() {
+        return phone;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getEmail() {
@@ -70,30 +80,38 @@ public class User {
         this.email = email;
     }
 
-    public String getSex() {
-        return sex;
+    public String getAvatarLink() {
+        return avatarLink;
     }
 
-    public void setSex(String sex) {
-        this.sex = sex;
+    public void setAvatarLink(String avatarLink) {
+        this.avatarLink = avatarLink;
     }
 
+    public Integer getGender() {
+        return gender;
+    }
 
-    public UserAddress getAddress() {
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
+
+    public String getAddress() {
         return address;
     }
 
-    public void setAddress(UserAddress address) {
+    public void setAddress(String address) {
         this.address = address;
     }
 
-    public BirthDay getBirthDay() {
-        return birthDay;
+    public String getBirthday() {
+        return birthday;
     }
 
-    public void setBirthDay(BirthDay birthDay) {
-        this.birthDay = birthDay;
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
     }
 
 }
+
 
