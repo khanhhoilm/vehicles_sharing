@@ -30,7 +30,7 @@ public class ConfirmRequestAPI {
                     //error=0 is success and 1 is failure
                     confirmRequestCallback.confirmRequestSuccess(confirmId);
                 }else {
-                    confirmRequestCallback.confirmRequestFailure(response.body().getStatus().getMessage(),confirmId);
+                    confirmRequestCallback.confirmRequestFailure(String.valueOf(response.body().getStatus().getError()),confirmId);
                 }
             }
 

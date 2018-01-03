@@ -3,6 +3,7 @@ package vehiclessharing.vehiclessharing.model;
 /**
  * Created by Hihihehe on 9/27/2017.
  */
+
 import android.graphics.Bitmap;
 
 import com.google.gson.annotations.Expose;
@@ -33,6 +34,19 @@ public class User {
     @SerializedName("birthday")
     @Expose
     private String birthday;
+
+    //value 0 is not like and value 1 is like
+    @SerializedName("is_favorite")
+    @Expose
+    private Integer isFavorite;
+
+    public Integer getIsFavorite() {
+        return isFavorite;
+    }
+
+    public void setIsFavorite(Integer isFavorite) {
+        this.isFavorite = isFavorite;
+    }
 
     private Bitmap picture;
 

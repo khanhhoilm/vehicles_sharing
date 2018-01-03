@@ -55,6 +55,7 @@ import retrofit2.Response;
 import vehiclessharing.vehiclessharing.api.RelateRequestAPI;
 import vehiclessharing.vehiclessharing.api.RestManager;
 import vehiclessharing.vehiclessharing.authentication.SessionManager;
+import vehiclessharing.vehiclessharing.controller.activity.MainActivity;
 import vehiclessharing.vehiclessharing.controller.adapter.PlaceAutocompleteAdapter;
 import vehiclessharing.vehiclessharing.controller.adapter.SpinerVehicleTypeAdapter;
 import vehiclessharing.vehiclessharing.model.ActiveUser;
@@ -85,8 +86,8 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
     protected GoogleApiClient mGoogleApiClient;
 
     private PlaceAutocompleteAdapter mAdapter;
-    private int CUR_PLACE_AUTOCOMPLETE_REQUEST_CODE = 0;
-    private int DES_PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+    private int CUR_PLACE_AUTOCOMPLETE_REQUEST_CODE = 3;
+    private int DES_PLACE_AUTOCOMPLETE_REQUEST_CODE = 4;
     private RelateRequestAPI.CancelRequestCallBack cancelRequestCallBack;
     private int userId;
     private String sessionId = "", refreshedToken = "";
@@ -259,6 +260,7 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
         switch (v.getId()) {
             case R.id.txtCurLocate: {
                 //   int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+                txtCurLocation.setEnabled(false);
                 try {
                     //   txtCurLocation.setText("");
                     Intent intent =
@@ -274,7 +276,7 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
             }
             case R.id.txtDesLocate:
                 // txtDesLocation.setText("");
-
+                txtDesLocation.setEnabled(false);
                 try {
                     Intent intent =
                             new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
@@ -291,13 +293,15 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
                 boolean checkEmpty = checkValidation();
                 if (!checkEmpty) {
                     btnOk.setEnabled(false);
+                    btnCancel.setEnabled(false);
                     progressBar.setVisibility(View.VISIBLE);
                     sendRequestToServer();
+                    MainActivity.btnAddClick=false;
                 }
                 break;
             case R.id.btnAddCancel:
                 dismiss();
-
+                MainActivity.btnAddClick=false;
                 break;
             case R.id.imgClearCurLocation:
                 txtCurLocation.setText("");
@@ -336,7 +340,11 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
             Log.d("Token FCM", "Token Value: " + deviceToken);
             Log.d("DeviceId", "Device Id Value: " + deviceId);
 
-            mManager.getApiService().registerRequest(userId, sourLocation, desLocation, time, sessionId, deviceId, vehicleType, deviceToken).enqueue(new Callback<RequestResult>() {
+            java.util.Calendar calendarCurrent = java.util.Calendar.getInstance();
+            java.text.SimpleDateFormat simpleDateFormatCurrent = new java.text.SimpleDateFormat("HH:mm");
+
+            String currentTime=simpleDateFormatCurrent.format(calendarCurrent.getTime());
+            mManager.getApiService().registerRequest(userId, sourLocation, desLocation, time, sessionId, deviceId, vehicleType, deviceToken,currentTime).enqueue(new Callback<RequestResult>() {
                 @Override
                 public void onResponse(Call<RequestResult> call, Response<RequestResult> response) {
                     try {
@@ -365,7 +373,12 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
 
                         } else {
                             Toast.makeText(mContext, getString(R.string.add_request_fail), Toast.LENGTH_SHORT).show();
+
+                            if(response.code()==401){
+                                Toast.makeText(mContext, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+                            }
                             btnOk.setEnabled(true);
+                            btnCancel.setEnabled(true);
                         }
                     } catch (Exception e) {
                         Toast.makeText(mContext, "error send request to server", Toast.LENGTH_SHORT).show();
@@ -378,6 +391,7 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
                     progressBar.setVisibility(View.GONE);
                     if (isAdded()) {
                         btnOk.setEnabled(true);
+                        btnCancel.setEnabled(true);
                         Toast.makeText(mContext, getString(R.string.add_request_fail), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -428,6 +442,8 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        txtCurLocation.setEnabled(true);
+        txtDesLocation.setEnabled(true);
         Place place = PlaceAutocomplete.getPlace(getActivity(), data);
         if (requestCode == CUR_PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             //    if (resultCode == 1) {
@@ -445,6 +461,7 @@ public class AddRequestFragment extends DialogFragment implements View.OnClickLi
                 // The user canceled the operation.
             }*/
         } else if (requestCode == DES_PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+
             if (txtDesLocation != null && place != null) {
                 txtDesLocation.setText(place.getAddress());
             }

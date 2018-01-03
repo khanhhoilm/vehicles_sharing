@@ -47,12 +47,12 @@ public interface ApiService {
     Call<RequestResult> registerRequest(@Field("user_id") int userId, @Field("source_location") String sourceLocation,
                                         @Field("destination_location") String desLocation, @Field("time_start") String timeStart,
                                         @Field("api_token") String session, @Field("device_id") String devideId, @Field("vehicle_type") int vehicleType,
-                                        @Field("device_token") String deviceToken);
+                                        @Field("device_token") String deviceToken,@Field("current_time") String currenttime);
 
 
     @FormUrlEncoded
     @POST("api/get-active-request")
-    Call<RequestResult> updateListActiveUser(@Field("api_token") String apiToken, @Field("vehicle_type") int vehicleType);
+    Call<RequestResult> updateListActiveUser(@Field("api_token") String apiToken, @Field("vehicle_type") int vehicleType,@Field("current_time") String currentTime);
 
     @FormUrlEncoded
     @Headers("Accept: application/json")
@@ -72,6 +72,10 @@ public interface ApiService {
     Call<StartStripResponse> startTheTrip(@Field("api_token") String apiToken,@Field("partner_id") int parnerId);
 
     @FormUrlEncoded
+    @POST("api/cancel-the-trip")
+    Call<StatusResponse> cancelTrip(@Field("api_token") String apiToken,@Field("vehicle_type") int vehicleType,@Field("comment") String comment);
+
+    @FormUrlEncoded
     @POST("users/show")
     Call<UserInfo> getUserInfo(@Field("api_token") String apiToken, @Field("user_id") int userId);
 
@@ -88,5 +92,11 @@ public interface ApiService {
     @POST("users/show-history")
     Call<History> getHistory(@Field("api_token") String apiToken,@Field("user_type") String userType);
 
-
+    /*URL: https://vehicle-sharing.herokuapp.com/users/add-to-favorite
+Param:
+- api_token (require)
+- partner_id*/
+    @FormUrlEncoded
+    @POST("users/add-to-favorite")
+    Call<StatusResponse> addToFavorite(@Field("api_token") String apiToken,@Field("partner_id") int partnerId);
 }

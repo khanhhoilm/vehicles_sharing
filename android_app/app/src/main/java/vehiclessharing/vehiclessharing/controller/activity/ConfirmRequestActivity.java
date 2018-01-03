@@ -142,6 +142,7 @@ public class ConfirmRequestActivity extends AppCompatActivity implements View.On
                 if (CheckInternetAndLocation.isOnline(this)) {
                     progressBar.setVisibility(View.VISIBLE);
                     btnAccept.setEnabled(false);
+                    btnDeny.setEnabled(false);
                     sendConfirm(2);
                 }
                 break;
@@ -149,10 +150,12 @@ public class ConfirmRequestActivity extends AppCompatActivity implements View.On
                 if (CheckInternetAndLocation.isOnline(this)) {
                     progressBar.setVisibility(View.VISIBLE);
                     btnDeny.setEnabled(false);
+                    btnDeny.setEnabled(false);
                     sendConfirm(1);
                 }
                 break;
             case R.id.btnDirect:
+
                 Intent intent = new Intent(this, VehicleMoveActivity.class);
 
                 intent.putExtra(VehicleMoveActivity.CALL_FROM_WHAT_ACTIVITY, VehicleMoveActivity.CONFIRM_REQUEST);
@@ -187,11 +190,11 @@ public class ConfirmRequestActivity extends AppCompatActivity implements View.On
             btnDeny.setVisibility(View.GONE);
             btnDirect.setVisibility(View.VISIBLE);
             editorScreen=sharedPreferencesScreen.edit();
-            editorScreen.putInt(MainActivity.SCREEN_NAME,MainActivity.CONFIRM_ACCEPT);
+            editorScreen.putInt(MainActivity.SCREEN_NAME,MainActivity.WAIT_START_TRIP);
             editorScreen.commit();
         } else {
             editorScreen=sharedPreferencesScreen.edit();
-            editorScreen.putInt(MainActivity.SCREEN_NAME,MainActivity.CONFIRM_DENY);
+            editorScreen.putInt(MainActivity.SCREEN_NAME,MainActivity.ADDED_REQUEST);
             finish();
         }
 
@@ -200,32 +203,44 @@ public class ConfirmRequestActivity extends AppCompatActivity implements View.On
     @Override
     public void confirmRequestFailure(String message, int confirmId) {
         progressBar.setVisibility(View.GONE);
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-        if (confirmId == 2) {
-            Toast.makeText(this, getResources().getString(R.string.request_accept_send_success), Toast.LENGTH_SHORT).show();
-            yourRequestInfo = new RequestInfo();
-            yourRequestInfo.setTimeStart(receiveRequest.getStartTime());
-            yourRequestInfo.setSourceLocation(receiveRequest.getStartLocation());
-            yourRequestInfo.setDestLocation(receiveRequest.getEndLocation());
-            yourRequestInfo.setVehicleType(receiveRequest.getVehicleType());
-            if (databaseHelper.insertRequestNotMe(yourRequestInfo, receiveRequest.getUserId())) {
-                Log.d("insertRequest", "success");
-            }
-            Log.d("accept request", "success");
-
-            btnAccept.setVisibility(View.GONE);
-            btnDeny.setVisibility(View.GONE);
-            btnDirect.setVisibility(View.VISIBLE);
-        } else {
+        Toast.makeText(this, "failure", Toast.LENGTH_SHORT).show();
+        if(message.equals("1")){
             finish();
 
-            SharedPreferences sharedPreferencesScreen=getSharedPreferences(MainActivity.SCREEN_AFTER_BACK,MODE_PRIVATE);
-            SharedPreferences.Editor editor=sharedPreferencesScreen.edit();
-            editor.putInt(MainActivity.SCREEN_NAME,MainActivity.CONFIRM_DENY);
+            SharedPreferences sharedPreferencesScreen = getSharedPreferences(MainActivity.SCREEN_AFTER_BACK, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferencesScreen.edit();
+            editor.putInt(MainActivity.SCREEN_NAME, MainActivity.ADDED_REQUEST);
             editor.commit();
-            Intent intent=new Intent(this,MainActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
 
             startActivity(intent);
+        }else {
+            if (confirmId == 2) {
+                Toast.makeText(this, getResources().getString(R.string.request_accept_send_success), Toast.LENGTH_SHORT).show();
+                yourRequestInfo = new RequestInfo();
+                yourRequestInfo.setTimeStart(receiveRequest.getStartTime());
+                yourRequestInfo.setSourceLocation(receiveRequest.getStartLocation());
+                yourRequestInfo.setDestLocation(receiveRequest.getEndLocation());
+                yourRequestInfo.setVehicleType(receiveRequest.getVehicleType());
+                if (databaseHelper.insertRequestNotMe(yourRequestInfo, receiveRequest.getUserId())) {
+                    Log.d("insertRequest", "success");
+                }
+                Log.d("accept request", "success");
+
+                btnAccept.setVisibility(View.GONE);
+                btnDeny.setVisibility(View.GONE);
+                btnDirect.setVisibility(View.VISIBLE);
+            } else {
+                finish();
+
+                SharedPreferences sharedPreferencesScreen = getSharedPreferences(MainActivity.SCREEN_AFTER_BACK, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferencesScreen.edit();
+                editor.putInt(MainActivity.SCREEN_NAME, MainActivity.CONFIRM_DENY);
+                editor.commit();
+                Intent intent = new Intent(this, MainActivity.class);
+
+                startActivity(intent);
+            }
         }
     }
 }

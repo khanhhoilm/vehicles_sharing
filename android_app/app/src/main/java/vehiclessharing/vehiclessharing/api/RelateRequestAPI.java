@@ -38,6 +38,7 @@ public class RelateRequestAPI {
             @Override
             public void onFailure(Call<StatusResponse> call, Throwable t) {
                 Log.d("CancelRequest", "failed");
+                cancelRequestCallBack.cancelRequestFailed();
             }
         });
     }
@@ -67,7 +68,7 @@ public class RelateRequestAPI {
 */
     public interface CancelRequestCallBack {
         void cancelRequestSuccess(boolean success);
-
+        void cancelRequestFailed();
       //  void addRequestSuccessful(LatLng cur, LatLng des, String time, int type, List<ActiveUser> list );
     }
 

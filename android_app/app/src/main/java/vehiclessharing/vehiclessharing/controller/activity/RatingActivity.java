@@ -113,10 +113,15 @@ public class RatingActivity extends AppCompatActivity implements View.OnClickLis
         switch (id) {
             case R.id.btnSendRating:
                 if (CheckInternetAndLocation.isOnline(this)) {
-                    btnSend.setEnabled(false);
-                    progressBar.setVisibility(View.VISIBLE);
+
                     if (journeyId != 0) {
+                        btnSend.setEnabled(false);
+                        ratingBar.setEnabled(false);
+                        progressBar.setVisibility(View.VISIBLE);
                         RatingUserTogether.getInstance(this).rating(apiToken, journeyId, ratingBar.getRating(), txtComment.getText().toString());
+                   }else {
+                        Intent intent = new Intent(this, MainActivity.class);
+                        startActivity(intent);
                     }
                 }
                 break;
@@ -137,12 +142,20 @@ public class RatingActivity extends AppCompatActivity implements View.OnClickLis
     public void ratingSuccess() {
         progressBar.setVisibility(View.GONE);
         Toast.makeText(this, "rating success", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
 
         editorScreen = sharedPreferencesScreen.edit();
         editorScreen.putInt(MainActivity.SCREEN_NAME, MainActivity.MAIN_ACTIVITY);
         editorScreen.commit();
+
+        if (ratingBar.getRating() < 4) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }else {
+            Intent intent=new Intent(this,LikeUserActivity.class);
+            intent.putExtra(LikeUserActivity.PARTNER_ID,yourRequestInfo.getUserId());
+            startActivity(intent);
+        }
+
     }
 
     @Override
@@ -150,6 +163,7 @@ public class RatingActivity extends AppCompatActivity implements View.OnClickLis
         progressBar.setVisibility(View.GONE);
         btnSend.setEnabled(true);
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+
     }
 
     @Override

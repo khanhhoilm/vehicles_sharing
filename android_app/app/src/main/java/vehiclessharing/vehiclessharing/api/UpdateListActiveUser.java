@@ -17,19 +17,25 @@ public class UpdateListActiveUser {
     private static UpdateListActiveUser updateListActiveUser;
     private static UpdateListActiveUserCallback updateListActiveUserCallback;
 
-    public static UpdateListActiveUser getInstance(UpdateListActiveUserCallback callback){
-        updateListActiveUserCallback=callback;
-        restManager=new RestManager();
+    public static UpdateListActiveUser getInstance(UpdateListActiveUserCallback callback) {
+        updateListActiveUserCallback = callback;
+        restManager = new RestManager();
         return new UpdateListActiveUser();
     }
 
-    public void getListUpdate(String apiToken, int vehicleType){
-        restManager.getApiService().updateListActiveUser(apiToken,vehicleType).enqueue(new Callback<RequestResult>() {
+    public void getListUpdate(String apiToken, int vehicleType) {
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        java.text.SimpleDateFormat sdf1 = new java.text.SimpleDateFormat("HH:mm");
+        String currentTime = sdf1.format(calendar.getTime());
+        restManager.getApiService().updateListActiveUser(apiToken, vehicleType, currentTime).enqueue(new Callback<RequestResult>() {
             @Override
             public void onResponse(Call<RequestResult> call, Response<RequestResult> response) {
-                if(response.isSuccessful()&&response.body().getStatus().getError()==0&&response.body().getActiveUsers()!=null&&response.body().getActiveUsers().size()>0){
+                if (response.isSuccessful() && response.body().getStatus().getError() == 0 && response.body().getActiveUsers() != null
+                        && response.body().getActiveUsers().size() > 0) {
                     updateListActiveUserCallback.getListActiveUserUpdateSuccess(response.body().getActiveUsers());
-                }else {
+                } /*else if (response.body().getStatus().getError() == 1) {
+                    updateListActiveUserCallback.noRequestInCurrent();
+                }*/ else {
                     updateListActiveUserCallback.getListActiveUserFailure("Không có user nào");
                 }
             }
@@ -42,8 +48,9 @@ public class UpdateListActiveUser {
     }
 
 
-    public interface UpdateListActiveUserCallback{
+    public interface UpdateListActiveUserCallback {
         void getListActiveUserUpdateSuccess(List<ActiveUser> activeUsers);
         void getListActiveUserFailure(String message);
+        void noRequestInCurrent();
     }
 }

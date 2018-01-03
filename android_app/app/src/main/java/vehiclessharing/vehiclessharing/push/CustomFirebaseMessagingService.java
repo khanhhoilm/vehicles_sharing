@@ -59,7 +59,7 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService {
 
         String jsonReceive = "";
         String status = "";
-        if (remoteMessage.getData().get("data") != null) {
+               if (remoteMessage.getData().get("data") != null) {
             jsonReceive = remoteMessage.getData().get("data");
 
             try {
@@ -87,7 +87,7 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService {
                             message = "Yêu cầu của bạn đã được chấp nhận";
                         } else {
                             editorScreen=sharedPreferencesScreen.edit();
-                            editorScreen.putInt(MainActivity.SCREEN_NAME,MainActivity.CONFIRM_DENY);
+                            editorScreen.putInt(MainActivity.SCREEN_NAME,MainActivity.ADDED_REQUEST);
                             editorScreen.commit();
                             intent = new Intent(this, MainActivity.class);
                             message = "Yêu cầu của bạn đã bị từ chối";

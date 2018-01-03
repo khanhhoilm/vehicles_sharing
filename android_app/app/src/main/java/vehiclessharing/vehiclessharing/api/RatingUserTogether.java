@@ -13,11 +13,8 @@ public class RatingUserTogether {
     private static RestManager restManager;
     private static RatingCallback ratingCallback;
 
-
     public static RatingUserTogether getInstance(RatingCallback callBack) {
-
         ratingCallback = callBack;
-        restManager=new RestManager();
         return new RatingUserTogether();
     }
 
@@ -41,6 +38,7 @@ public class RatingUserTogether {
 
     public interface RatingCallback {
         void ratingSuccess();
+
         void ratingFailure(String message);
     }
 }

@@ -3,8 +3,7 @@ package vehiclessharing.vehiclessharing.controller.fragment;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.net.Uri;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -23,6 +22,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vehiclessharing.vehiclessharing.api.RestManager;
+import vehiclessharing.vehiclessharing.controller.activity.MainActivity;
 import vehiclessharing.vehiclessharing.model.ResultSendRequest;
 
 /**
@@ -59,8 +59,8 @@ public class SendRequestFragment extends DialogFragment implements View.OnClickL
      * @return A new instance of fragment SendRequestFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SendRequestFragment newInstance(String apiToken, int receiverId,SendRequestCallBack callBack) {
-        sendRequestCallBack=callBack;
+    public static SendRequestFragment newInstance(String apiToken, int receiverId, SendRequestCallBack callBack) {
+        sendRequestCallBack = callBack;
         SendRequestFragment fragment = new SendRequestFragment();
         Bundle args = new Bundle();
         args.putString(API_TOKEN, apiToken);
@@ -148,18 +148,28 @@ public class SendRequestFragment extends DialogFragment implements View.OnClickL
         restManager.getApiService().sendRequestTogether(apiToken, receiverId, note).enqueue(new Callback<ResultSendRequest>() {
             @Override
             public void onResponse(Call<ResultSendRequest> call, Response<ResultSendRequest> response) {
-                if (response.isSuccessful() && response.body().getStatus().getError()==0) {
-               if(isAdded()) {
-                   dismiss();
-                   Toast.makeText(mActivity, mActivity.getString(R.string.wait_accept), Toast.LENGTH_SHORT).show();
-               }
+                if (response.isSuccessful() && response.body().getStatus().getError() == 0) {
+                    if (isAdded()) {
+                        dismiss();
+                        Toast.makeText(mActivity, mActivity.getString(R.string.wait_accept), Toast.LENGTH_SHORT).show();
+                    }
                     sendRequestCallBack.sendRequestSuccess();
-                }else {
+                } else {
                     Toast.makeText(mActivity, "Send failed", Toast.LENGTH_SHORT).show();
-                   if(isAdded()) {
-                       dismiss();
-                   }
+                    if (isAdded()) {
+                        dismiss();
+                    }
+                    //sendRequestCallBack.sendRequestSuccess();
                 }
+                java.util.Calendar calendar = java.util.Calendar.getInstance();
+                java.text.SimpleDateFormat sdf1 = new java.text.SimpleDateFormat("HH:mm");
+                String currentTime = sdf1.format(calendar.getTime());
+
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences(MainActivity.SCREEN_AFTER_BACK, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt(MainActivity.SCREEN_NAME, MainActivity.WAIT_CONFIRM);
+                editor.putString(MainActivity.TIME_SEND_REQUEST, currentTime);
+                editor.commit();
             }
 
             @Override
@@ -169,6 +179,7 @@ public class SendRequestFragment extends DialogFragment implements View.OnClickL
             }
         });
     }
+
     public interface SendRequestCallBack {
         // TODO: Update argument type and name
         void sendRequestSuccess();

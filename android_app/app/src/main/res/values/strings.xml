@@ -41,8 +41,8 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="default_web_client_id1">1093380309543-o85979qbsnp54ppfi91m1pdaceb4p86o.apps.googleusercontent.com</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
+    <string name="yes">Có</string>
+    <string name="no">Không</string>
     <string name="dialog_find_vehicle">Bạn không có xe và có nhu cầu tìm 1 xe để đi nhờ. Để tìm được xe dễ dàng hơn, vui lòng điền đầy đủ thông tin bên dưới</string>
     <string name="dialog_find_people">Bạn có xe và muốn tìm người đi chung. Để tìm được người đi chung dễ dàng hơn, vui lòng điền đầy đủ thông tin bên dưới</string>
     <string name="user_exists">Số điện thoại đã tồn tại</string>
@@ -53,10 +53,12 @@
 
     <string name="my_source"></string>
     <string name="title_send_request">Bạn có chắc muốn gửi yêu cầu?</string>
+    <string name="title_cancel_trip">Bạn có chắc muốn hủy chuyến đi?</string>
     <string name="confirm_send_request">Bạn chỉ được gửi thông báo đến 1 người, sau khi nhận lại yêu cầu đồng ý chuyến đí của hai bạn sẽ bắt đầu. Nếu bạn bị từ chối bạn mới có thể gửi tiếp 1 yêu cầu khác</string>
     <string name="history">Lịch sử các chuyến đi của bạn</string>
     <string name="rating_another_user">Đánh giá người đi cùng</string>
     <string name="write_comment_rating">Viết bình luận...</string>
+    <string name="reason_cancel_trip">Lí do bạn hủy chuyến đi là gì?</string>
 
     <string name="api_key">AIzaSyDhyyqjvSnOqSm6Aq_vkjCvJeR4BI8gTvc</string>
     <string-array name="sexs_array">
@@ -114,5 +116,11 @@
     <string name="your_rating">Đánh giá của người đi chung</string>
     <string name="no_history">Bạn chưa có chuyến đi nào</string>
     <string name="no_rating">Chưa có đánh giá</string>
+    <string name="no_request">Yêu cầu của bạn đã vượt qua thời gian bắt đầu đã lâu. Vui lòng tạo yêu cầu khác</string>
+    <string name="user_info">Trang cá nhân</string>
+    <string name="cancel_trip_yes">Hủy chuyến đi</string>
 
+    <string name="sinch_app_key">e212d8cf-ff2a-46d5-88a9-9bf52ff42be5</string>
+    <string name="sinch_app_secret">b5c1aay+2k2Q0+QVmMfH5A==</string>
+    <string name="sinch_host_name">clientapi.sinch.com</string>
 </resources>

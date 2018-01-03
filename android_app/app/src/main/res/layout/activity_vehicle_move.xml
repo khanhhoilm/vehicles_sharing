@@ -10,7 +10,17 @@
         layout="@layout/content_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btnCancelStrip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_margin="@dimen/fab_margin"
+        android:visibility="visible"
+        android:tint="@color/white"
+        app:backgroundTint="@color/edit_profile_icon"
+        app:srcCompat="@drawable/ic_clear_red_a700_24dp"
+        />
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/btnStartStrip"
         android:layout_width="wrap_content"

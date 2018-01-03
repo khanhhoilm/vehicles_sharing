@@ -51,7 +51,6 @@ public class CheckerGPS {
             }
             return false;
         } else {
-            //mGoogleMap.setMyLocationEnabled(true);
             return true;
         }
     }

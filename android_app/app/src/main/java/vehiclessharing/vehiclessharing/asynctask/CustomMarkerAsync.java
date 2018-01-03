@@ -42,16 +42,15 @@ import vehiclessharing.vehiclessharing.model.ActiveUser;
 
 
 public class CustomMarkerAsync extends AsyncTask<ActiveUser, Void, Bitmap> {
-    /*private UserInfo user;
-    private RequestInfo requestInfo;
-    */private Activity mActivity;
+    private Activity mActivity;
     private GoogleMap googleMap;
     private ActiveUser activeUser;
-    //  private String hashKey;
+    private int positionInList;
 
-    public CustomMarkerAsync(Activity mActivity) {
+    public CustomMarkerAsync(Activity mActivity, int position) {
         this.mActivity = mActivity;
         googleMap = MainActivity.mGoogleMap;
+        positionInList = position;
     }
 
     @Override
@@ -62,15 +61,12 @@ public class CustomMarkerAsync extends AsyncTask<ActiveUser, Void, Bitmap> {
 
         try {
             activeUser = params[0];
-           /* user = params[0].getUserInfo();
-            requestInfo = params[0].getRequestInfo();
-*/
+
             if (activeUser.getUserInfo().getAvatarLink() != null) {
                 bitmap = BitmapFactory.decodeStream(fetch(activeUser.getUserInfo().getAvatarLink()));
-            }/* else {
+            } else {
                 bitmap = BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.temp);
-            }*/
-
+            }
         } catch (Exception e) {
             Log.e("Loi", e.toString());
         }
@@ -83,7 +79,6 @@ public class CustomMarkerAsync extends AsyncTask<ActiveUser, Void, Bitmap> {
     protected void onPostExecute(Bitmap bitmap) {
         if (android.os.Debug.isDebuggerConnected())
             android.os.Debug.waitForDebugger();
-        //    super.onPostExecute(bitmap);
         Bitmap bitmap1 = null;
 
         LatLng source = new LatLng(0, 0);
@@ -92,52 +87,52 @@ public class CustomMarkerAsync extends AsyncTask<ActiveUser, Void, Bitmap> {
 
         if (activeUser != null && activeUser.getRequestInfo() != null && activeUser.getUserInfo() != null) {
             try {
-                bitmap1 = getCustomMarkerView(bitmap, activeUser.getRequestInfo().getVehicleType());
+                if (activeUser.getUserInfo().getIsFavorite()==null){
+                    activeUser.getUserInfo().setIsFavorite(0);
+                }
+                bitmap1 = getCustomMarkerView(activeUser.getRequestInfo().getVehicleType(), activeUser.getUserInfo().getIsFavorite());
                 source = new LatLng(Double.parseDouble(activeUser.getRequestInfo().getSourceLocation().getLat()), Double.parseDouble(activeUser.getRequestInfo().getSourceLocation().getLng()));
                 customMarker = googleMap.addMarker(new MarkerOptions().position(source).title(activeUser.getUserInfo().getName())
                         .icon(BitmapDescriptorFactory.fromBitmap(bitmap1)));
                 customMarker.setTag("another");
                 MainActivity.markerHashMap.put(activeUser, customMarker);
                 MainActivity.userHashMap.put(customMarker, activeUser);
+                MainActivity.numberMarkerInHashMap.put(positionInList, customMarker);
             } catch (Exception e) {
 
             }
-        } /*else {
-            source = new LatLng(10.795435800000002, 106.6824499);
-            customMarker = googleMap.addMarker(new MarkerOptions().position(source).title(user.getName())
-                    .icon(BitmapDescriptorFactory.fromBitmap(bitmap1)));
-            customMarker.setTag(activeUser);
-            MainActivity.markerHashMap.put(activeUser, customMarker);
-        }*/
+        }
 
     }
 
-    private Bitmap getCustomMarkerView(Bitmap bitmap, int vehicleType) {
+    /**
+     * @param vehicleType
+     * @param isFavorite  1 is favorite
+     * @return
+     */
+    private Bitmap getCustomMarkerView(int vehicleType, int isFavorite) {
         View customMarkerView = ((LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker, null);
-        ImageView markerImageView = (ImageView) customMarkerView.findViewById(R.id.profile_image);
+        ImageView imgVehicleType = (ImageView) customMarkerView.findViewById(R.id.profile_image);
+        ImageView imgFavorite = customMarkerView.findViewById(R.id.imgFavorite);
 
-        if (bitmap == null) {
-            switch (vehicleType) {
-                case 0:
-                    markerImageView.setImageResource(R.drawable.ic_accessibility_cyan_900_48dp);
-                    break;
-                case 1:
-                    markerImageView.setImageResource(R.drawable.ic_motorcycle_cyan_900_48dp);
-                    break;
-                case 2:
-                    markerImageView.setImageResource(R.drawable.ic_directions_car_cyan_900_48dp);
-                    break;
-                default:
-                    markerImageView.setImageResource(R.drawable.temp);
-            }
+        if (isFavorite == 1) {
+            imgFavorite.setVisibility(View.VISIBLE);
         } else {
-            try {
-                markerImageView.setImageBitmap(bitmap);
-            } catch (Exception e) {
-                Log.e("Loi", e.toString());
-            }
+            imgFavorite.setVisibility(View.GONE);
         }
-        //final View customMarkerView = ((LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker, null);
+        switch (vehicleType) {
+            case 0:
+                imgVehicleType.setImageResource(R.drawable.ic_accessibility_cyan_900_48dp);
+                break;
+            case 1:
+                imgVehicleType.setImageResource(R.drawable.ic_motorcycle_cyan_900_48dp);
+                break;
+            case 2:
+                imgVehicleType.setImageResource(R.drawable.ic_directions_car_cyan_900_48dp);
+                break;
+            default:
+                imgVehicleType.setImageResource(R.drawable.temp);
+        }
         customMarkerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         customMarkerView.layout(0, 0, customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight());
         customMarkerView.buildDrawingCache();
