@@ -16,7 +16,8 @@
     <color name="yellow">#f1c40f</color>
 
     <color name="button_edit_profile">#3498db</color>
-    <color name="color_line_field">#34495e</color>
+   <!-- <color name="color_line_field">#34495e</color>-->
+    <color name="color_line_field">#ABB7B7</color>
     <color name="background_nav_header">#ff8533</color>
     <color name="text_color">#000000</color>
     <color name="star_color">#E98E2D</color>

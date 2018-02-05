@@ -11,14 +11,11 @@ import vehiclessharing.vehiclessharing.model.StatusResponse;
 
 public class ConfirmRequestAPI {
     private RestManager restManager;
-    private static ConfirmRequestCallback confirmRequestCallback;
-    //   private Dialog dialogConfirmSend;
+    private ConfirmRequestCallback confirmRequestCallback;
 
-
-    public static ConfirmRequestAPI getInstance(ConfirmRequestCallback callBack) {
-
-        confirmRequestCallback = callBack;
-        return new ConfirmRequestAPI();
+    public ConfirmRequestAPI(ConfirmRequestCallback confirmRequestCallback) {
+        this.confirmRequestCallback = confirmRequestCallback;
+        restManager=new RestManager();
     }
 
     public void sendConfirmRequest(String apiToken, int senderId, final int confirmId)

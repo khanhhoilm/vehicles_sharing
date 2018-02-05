@@ -12,11 +12,6 @@ import android.support.v4.content.ContextCompat;
  */
 
 public class CheckInternetAndLocation {
-  //  private Context mContext;
-/*
-    public CheckInternetAndLocation(Context mContext) {
-        this.mContext = mContext;
-    }*/
 
     public static boolean isOnline(Context mContext) {
         ConnectivityManager cm =

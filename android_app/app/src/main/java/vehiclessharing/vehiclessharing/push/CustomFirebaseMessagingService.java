@@ -25,11 +25,11 @@ import java.util.Map;
 import java.util.Random;
 
 import co.vehiclessharing.R;
-import vehiclessharing.vehiclessharing.controller.activity.ConfirmRequestActivity;
-import vehiclessharing.vehiclessharing.controller.activity.MainActivity;
-import vehiclessharing.vehiclessharing.controller.activity.RatingActivity;
-import vehiclessharing.vehiclessharing.controller.activity.ReceiveConfirmRequestActivity;
-import vehiclessharing.vehiclessharing.controller.activity.VehicleMoveActivity;
+import vehiclessharing.vehiclessharing.view.activity.ConfirmRequestActivity;
+import vehiclessharing.vehiclessharing.view.activity.MainActivity;
+import vehiclessharing.vehiclessharing.view.activity.RatingActivity;
+import vehiclessharing.vehiclessharing.view.activity.ReceiveConfirmRequestActivity;
+import vehiclessharing.vehiclessharing.view.activity.VehicleMoveActivity;
 
 public class CustomFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = CustomFirebaseMessagingService.class.getSimpleName();
@@ -59,7 +59,7 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService {
 
         String jsonReceive = "";
         String status = "";
-               if (remoteMessage.getData().get("data") != null) {
+        if (remoteMessage.getData().get("data") != null) {
             jsonReceive = remoteMessage.getData().get("data");
 
             try {
@@ -70,7 +70,7 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService {
                 if (jsonObject.has("status")) {
                     status = (String) jsonObject.get("status");
                 }
-                sharedPreferencesScreen=getSharedPreferences(MainActivity.SCREEN_AFTER_BACK,MODE_PRIVATE);
+                sharedPreferencesScreen = getSharedPreferences(MainActivity.SCREEN_AFTER_BACK, MODE_PRIVATE);
 
 
                 switch (type) {
@@ -86,8 +86,8 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService {
                             intent.putExtra(DATA_RECEIVE, jsonReceive);
                             message = "Yêu cầu của bạn đã được chấp nhận";
                         } else {
-                            editorScreen=sharedPreferencesScreen.edit();
-                            editorScreen.putInt(MainActivity.SCREEN_NAME,MainActivity.ADDED_REQUEST);
+                            editorScreen = sharedPreferencesScreen.edit();
+                            editorScreen.putInt(MainActivity.SCREEN_NAME, MainActivity.ADDED_REQUEST);
                             editorScreen.commit();
                             intent = new Intent(this, MainActivity.class);
                             message = "Yêu cầu của bạn đã bị từ chối";
@@ -104,9 +104,9 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService {
                             intent.putExtra("journey_id", journeyId);
                             intent.putExtra(VehicleMoveActivity.CALL_FROM_WHAT_ACTIVITY, VehicleMoveActivity.START_TRIP);
 
-                            editorScreen=sharedPreferencesScreen.edit();
-                            editorScreen.putInt(MainActivity.SCREEN_NAME,MainActivity.STARTED_TRIP);
-                            editorScreen.putInt(VehicleMoveActivity.JOURNEY_ID,journeyId);
+                            editorScreen = sharedPreferencesScreen.edit();
+                            editorScreen.putInt(MainActivity.SCREEN_NAME, MainActivity.STARTED_TRIP);
+                            editorScreen.putInt(VehicleMoveActivity.JOURNEY_ID, journeyId);
                             editorScreen.commit();
                         }
                         title = "Bắt đầu chuyến đi";
@@ -121,14 +121,31 @@ public class CustomFirebaseMessagingService extends FirebaseMessagingService {
                         if (jsonObject.has("journey_id")) {
                             Integer journeyId = (Integer) jsonObject.get("journey_id");
                             intent.putExtra("journey_id", journeyId);
-
-                            editorScreen=sharedPreferencesScreen.edit();
-                            editorScreen.putInt(MainActivity.SCREEN_NAME,MainActivity.RATING);
-                            editorScreen.putInt(VehicleMoveActivity.JOURNEY_ID,journeyId);
-                            editorScreen.commit();
                         }
                         title = "Chuyến đi đã kết thúc";
                         message = "Hãy rating ngay cho người đi cùng  nào";
+                        break;
+                    case "cancel_the_trip":
+                        title = "Chuyến đi của bạn đã bị hủy";
+                        String comment = "";
+                        if (jsonObject.has("comment")) {
+                            comment = jsonObject.getString("comment");
+                        }
+                        if (comment.length() > 0) {
+                            message = "Lí do: " + comment;
+                        } else {
+                            message = "Người đi chung đã hủy với không lí do";
+                        }
+                        intent =new Intent(this,MainActivity.class);
+                        editorScreen = sharedPreferencesScreen.edit();
+                        editorScreen.putInt(MainActivity.SCREEN_NAME, MainActivity.MAIN_ACTIVITY);
+                        editorScreen.commit();
+                        break;
+                    default:
+                        intent=new Intent(this,MainActivity.class);
+                        editorScreen = sharedPreferencesScreen.edit();
+                        editorScreen.putInt(MainActivity.SCREEN_NAME, MainActivity.MAIN_ACTIVITY);
+                        editorScreen.commit();
                         break;
                 }
 

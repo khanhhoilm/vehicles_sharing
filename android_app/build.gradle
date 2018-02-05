@@ -1,4 +1,4 @@
-// Top-level build file wheere you can add configuration options common to all sub-projects/modules.
+ // Top-level build file wheere you can add configuration options common to all sub-projects/modules.
 
 buildscript {
     repositories {
@@ -11,6 +11,8 @@ buildscript {
         // in the individusal module build.gradle files
         classpath 'com.google.gms:google-services:3.0.0'
         classpath "io.realm:realm-gradle-plugin:3.1.4"//Realm Database
+        classpath 'com.amitshekhar.android:debug-db:1.0.2'
+     //   classpath ':dexguard:'
     }
 }
 

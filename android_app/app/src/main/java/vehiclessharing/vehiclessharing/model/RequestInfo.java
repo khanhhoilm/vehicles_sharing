@@ -1,6 +1,5 @@
 package vehiclessharing.vehiclessharing.model;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -23,6 +22,8 @@ public class RequestInfo {
     private String timeStart;
 
     private int userId;
+
+    private String avatarLink;
 
     public int getUserId() {
         return userId;
@@ -64,5 +65,11 @@ public class RequestInfo {
         this.timeStart = timeStart;
     }
 
+    public String getAvatarLink() {
+        return avatarLink;
+    }
 
+    public void setAvatarLink(String avatarLink) {
+        this.avatarLink = avatarLink;
+    }
 }

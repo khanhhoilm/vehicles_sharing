@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -33,7 +34,8 @@ import java.net.MalformedURLException;
 import java.net.URI;
 
 import co.vehiclessharing.R;
-import vehiclessharing.vehiclessharing.controller.activity.MainActivity;
+import de.hdodenhof.circleimageview.CircleImageView;
+import vehiclessharing.vehiclessharing.view.activity.MainActivity;
 import vehiclessharing.vehiclessharing.model.ActiveUser;
 
 /**
@@ -55,8 +57,6 @@ public class CustomMarkerAsync extends AsyncTask<ActiveUser, Void, Bitmap> {
 
     @Override
     protected Bitmap doInBackground(ActiveUser... params) {
-        if (android.os.Debug.isDebuggerConnected())
-            android.os.Debug.waitForDebugger();
         Bitmap bitmap = null;
 
         try {
@@ -87,10 +87,7 @@ public class CustomMarkerAsync extends AsyncTask<ActiveUser, Void, Bitmap> {
 
         if (activeUser != null && activeUser.getRequestInfo() != null && activeUser.getUserInfo() != null) {
             try {
-                if (activeUser.getUserInfo().getIsFavorite()==null){
-                    activeUser.getUserInfo().setIsFavorite(0);
-                }
-                bitmap1 = getCustomMarkerView(activeUser.getRequestInfo().getVehicleType(), activeUser.getUserInfo().getIsFavorite());
+                bitmap1 = getCustomMarkerView(bitmap,activeUser.getUserInfo().getAvatarLink(), activeUser.getRequestInfo().getVehicleType(), activeUser.getUserInfo().getIsFavorite());
                 source = new LatLng(Double.parseDouble(activeUser.getRequestInfo().getSourceLocation().getLat()), Double.parseDouble(activeUser.getRequestInfo().getSourceLocation().getLng()));
                 customMarker = googleMap.addMarker(new MarkerOptions().position(source).title(activeUser.getUserInfo().getName())
                         .icon(BitmapDescriptorFactory.fromBitmap(bitmap1)));
@@ -110,11 +107,18 @@ public class CustomMarkerAsync extends AsyncTask<ActiveUser, Void, Bitmap> {
      * @param isFavorite  1 is favorite
      * @return
      */
-    private Bitmap getCustomMarkerView(int vehicleType, int isFavorite) {
+    private Bitmap getCustomMarkerView(Bitmap bitmap,String avatarLink, int vehicleType, int isFavorite) {
         View customMarkerView = ((LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker, null);
-        ImageView imgVehicleType = (ImageView) customMarkerView.findViewById(R.id.profile_image);
+        CircleImageView imgAvatar = customMarkerView.findViewById(R.id.profile_image);
+        ImageView imgVehicleType = (ImageView) customMarkerView.findViewById(R.id.imgVehicleType);
         ImageView imgFavorite = customMarkerView.findViewById(R.id.imgFavorite);
 
+        if (avatarLink != null&&!avatarLink.equals("")) {
+            Glide.with(mActivity).load(avatarLink).placeholder(mActivity.getResources().getDrawable(R.drawable.temp)).centerCrop().into(imgAvatar);
+            imgAvatar.setImageBitmap(bitmap);
+        }else {
+            imgAvatar.setImageResource(R.drawable.temp);
+        }
         if (isFavorite == 1) {
             imgFavorite.setVisibility(View.VISIBLE);
         } else {
@@ -131,7 +135,7 @@ public class CustomMarkerAsync extends AsyncTask<ActiveUser, Void, Bitmap> {
                 imgVehicleType.setImageResource(R.drawable.ic_directions_car_cyan_900_48dp);
                 break;
             default:
-                imgVehicleType.setImageResource(R.drawable.temp);
+                imgVehicleType.setVisibility(View.GONE);
         }
         customMarkerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         customMarkerView.layout(0, 0, customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight());

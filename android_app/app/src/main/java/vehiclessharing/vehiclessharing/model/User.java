@@ -35,17 +35,40 @@ public class User {
     @Expose
     private String birthday;
 
-    //value 0 is not like and value 1 is like
+    @SerializedName("avg_hiker_vote")
+    @Expose
+    private int avgHikerVote;
+
+    @SerializedName("avg_driver_vote")
+    @Expose
+    private int avgDriverVote;
+
     @SerializedName("is_favorite")
     @Expose
-    private Integer isFavorite;
+    private int isFavorite;
 
-    public Integer getIsFavorite() {
+    public int getIsFavorite() {
         return isFavorite;
     }
 
-    public void setIsFavorite(Integer isFavorite) {
+    public void setIsFavorite(int isFavorite) {
         this.isFavorite = isFavorite;
+    }
+
+    public int getAvgHikerVote() {
+        return avgHikerVote;
+    }
+
+    public void setAvgHikerVote(int avgHikerVote) {
+        this.avgHikerVote = avgHikerVote;
+    }
+
+    public int getAvgDriverVote() {
+        return avgDriverVote;
+    }
+
+    public void setAvgDriverVote(int avgDriverVote) {
+        this.avgDriverVote = avgDriverVote;
     }
 
     private Bitmap picture;

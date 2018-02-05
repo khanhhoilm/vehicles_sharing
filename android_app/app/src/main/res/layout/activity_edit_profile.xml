@@ -27,13 +27,11 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/img_user"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:layout_centerInParent="true"
-
                     app:civ_border_color="@color/backgroundRecycleImage"
                     app:civ_fill_color="@color/backgroundRecycleImage"
-
                     android:src="@drawable/temp" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
@@ -99,18 +97,18 @@
                     android:layout_gravity="center"
                     android:padding="3dp"
                     android:tint="@color/colorPrimaryDark"
-                    android:src="@drawable/ic_email_orange_700_24dp" />
+                    android:src="@drawable/ic_mail_outline_white_24dp" />
 
                 <EditText
-                    android:id="@+id/txtEmail"
+                    android:id="@+id/edEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:editable="false"
                     android:paddingBottom="@dimen/margin_edit_profile"
                     android:paddingLeft="30dp"
                     android:paddingRight="@dimen/margin_5_dp"
                     android:paddingTop="@dimen/margin_edit_profile" />
             </RelativeLayout>
+
 
             <RadioGroup
                 android:id="@+id/rdgGender"
@@ -194,30 +192,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:focusable="false"
-                    android:paddingBottom="@dimen/margin_edit_profile"
-                    android:paddingLeft="30dp"
-                    android:paddingRight="@dimen/margin_5_dp"
-                    android:paddingTop="@dimen/margin_edit_profile" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center"
-                    android:padding="3dp"
-                    android:src="@drawable/ic_lock_outline_white_24dp"
-                    android:tint="@color/colorPrimaryDark" />
-
-                <EditText
-                    android:id="@+id/txtPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPassword"
                     android:paddingBottom="@dimen/margin_edit_profile"
                     android:paddingLeft="30dp"
                     android:paddingRight="@dimen/margin_5_dp"

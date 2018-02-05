@@ -54,7 +54,7 @@
     <string name="my_source"></string>
     <string name="title_send_request">Bạn có chắc muốn gửi yêu cầu?</string>
     <string name="title_cancel_trip">Bạn có chắc muốn hủy chuyến đi?</string>
-    <string name="confirm_send_request">Bạn chỉ được gửi thông báo đến 1 người, sau khi nhận lại yêu cầu đồng ý chuyến đí của hai bạn sẽ bắt đầu. Nếu bạn bị từ chối bạn mới có thể gửi tiếp 1 yêu cầu khác</string>
+    <string name="confirm_send_request">Bạn chỉ được gửi thông báo đến 1 người, sau khi nhận lại yêu cầu đồng ý chuyến đi của hai bạn sẽ bắt đầu. Nếu bạn bị từ chối bạn mới có thể gửi tiếp 1 yêu cầu khác</string>
     <string name="history">Lịch sử các chuyến đi của bạn</string>
     <string name="rating_another_user">Đánh giá người đi cùng</string>
     <string name="write_comment_rating">Viết bình luận...</string>
@@ -114,7 +114,7 @@
 
     <string name="my_rating">Đánh giá của bạn</string>
     <string name="your_rating">Đánh giá của người đi chung</string>
-    <string name="no_history">Bạn chưa có chuyến đi nào</string>
+    <string name="no_history">Chưa có chuyến đi nào</string>
     <string name="no_rating">Chưa có đánh giá</string>
     <string name="no_request">Yêu cầu của bạn đã vượt qua thời gian bắt đầu đã lâu. Vui lòng tạo yêu cầu khác</string>
     <string name="user_info">Trang cá nhân</string>
@@ -123,4 +123,9 @@
     <string name="sinch_app_key">e212d8cf-ff2a-46d5-88a9-9bf52ff42be5</string>
     <string name="sinch_app_secret">b5c1aay+2k2Q0+QVmMfH5A==</string>
     <string name="sinch_host_name">clientapi.sinch.com</string>
+
+    <string name="update_avatar_fail">Cập nhật ảnh đại diện thất bại</string>
+    <string name="update_avatar_success">Cập nhật ảnh đại diện thành công</string>
+    <string name="update_info_success">Cập nhật thông tin thành công</string>
+    <string name="update_info_fail">Cập nhật thông tin thất bại vui lòng thử lại</string>
 </resources>

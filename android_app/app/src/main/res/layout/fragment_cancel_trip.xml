@@ -3,9 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="vehiclessharing.vehiclessharing.controller.fragment.SendRequestFragment">
+    tools:context="vehiclessharing.vehiclessharing.view.fragment.SendRequestFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,5 +54,4 @@
             android:layout_weight="0.5"
             android:text="@string/no" />
     </LinearLayout>
-    <!--<include layout="@layout/progress_bar_send_request_to_api"/>-->
 </LinearLayout>

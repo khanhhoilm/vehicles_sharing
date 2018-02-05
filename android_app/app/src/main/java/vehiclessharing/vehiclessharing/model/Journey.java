@@ -16,7 +16,7 @@ public class Journey {
 
     @SerializedName("rating_value")
     @Expose
-    private Integer ratingValue;
+    private Double ratingValue;
 
     @SerializedName("start_time")
     @Expose
@@ -40,13 +40,13 @@ public class Journey {
 
     @SerializedName("partner")
     @Expose
-    private Partner partner;
+    private User partner;
 
     @SerializedName("partner_rating")
     @Expose
     private PartnerRating partnerRating;
 
-    public void setPartner(Partner partner) {
+    public void setPartner(User partner) {
         this.partner = partner;
     }
 
@@ -66,11 +66,11 @@ public class Journey {
         this.id = id;
     }
 
-    public Integer getRatingValue() {
+    public Double getRatingValue() {
         return ratingValue;
     }
 
-    public void setRatingValue(Integer ratingValue) {
+    public void setRatingValue(Double ratingValue) {
         this.ratingValue = ratingValue;
     }
     public StartTime getStartTime() {
@@ -113,7 +113,7 @@ public class Journey {
         this.endLocation = endLocation;
     }
 
-    public Partner getPartner() {
+    public User getPartner() {
         return partner;
     }
 
@@ -174,11 +174,4 @@ public class Journey {
         }
     }
 
-    /*                          "journey_id": 31,
-                                "user_id": 21,
-                                "rating_value": 5,
-                                "comment": "good",
-                                "vehicle_type": 0
-                            }
-                     */
 }

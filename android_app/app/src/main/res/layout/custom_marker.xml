@@ -2,23 +2,34 @@
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/custom_marker_view"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-
-    <ImageView
-        android:id="@+id/profile_image"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+    android:layout_width="80dp"
+    android:layout_height="80dp">
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:contentDescription="@null" />
+        android:background="@drawable/custom_background_marker">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_image"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_gravity="center"
+        android:contentDescription="@null"
+        android:src="@drawable/temp"/>
+    </FrameLayout>
     <ImageView
         android:id="@+id/imgFavorite"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_gravity="top|right"
-        android:src="@drawable/ic_favorite_yellow_800_18dp"
+        android:src="@drawable/ic_favorite_red_500_18dp"
         android:visibility="gone"/>
-
+    <ImageView
+        android:layout_width="25dp"
+        android:id="@+id/imgVehicleType"
+        android:layout_height="25dp"
+        android:layout_gravity="bottom|center"
+    />
 </FrameLayout>
 
 

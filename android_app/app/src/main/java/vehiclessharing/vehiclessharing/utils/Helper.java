@@ -30,7 +30,7 @@ import vehiclessharing.vehiclessharing.model.LatLngLocation;
 public class Helper {
     public static LatLng convertLatLngLocationToLatLng(LatLngLocation latLngLocation)
     {
-        return new LatLng(Double.parseDouble(latLngLocation.getLat()),Double.parseDouble(latLngLocation.getLng()));
+       return new LatLng(Double.parseDouble(latLngLocation.getLat()),Double.parseDouble(latLngLocation.getLng()));
     }
     public static LatLngLocation convertLatLngToLatLngLocation(LatLng latLng)
     {

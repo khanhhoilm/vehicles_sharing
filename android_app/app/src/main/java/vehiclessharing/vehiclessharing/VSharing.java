@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 
-import vehiclessharing.vehiclessharing.controller.activity.MainActivity;
+import vehiclessharing.vehiclessharing.view.activity.MainActivity;
 
 /**
  * Created by Hihihehe on 9/10/2017.

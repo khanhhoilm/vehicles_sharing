@@ -12,9 +12,9 @@ public class UserInfo {
     @Expose
     private Status status;
 
-    @SerializedName("user_info")
+    @SerializedName("information")
     @Expose
-    private User infoUser;
+    private InfomationUser infomationUser;
 
     public Status getStatus() {
         return status;
@@ -24,11 +24,11 @@ public class UserInfo {
         this.status = status;
     }
 
-    public User getInfoUser() {
-        return infoUser;
+    public InfomationUser getInfomationUser() {
+        return infomationUser;
     }
 
-    public void setInfoUser(User infoUser) {
-        this.infoUser = infoUser;
+    public void setInfomationUser(InfomationUser infomationUser) {
+        this.infomationUser = infomationUser;
     }
 }

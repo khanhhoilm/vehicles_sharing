@@ -15,6 +15,7 @@ public class FavoriteUserAPI {
 
     public FavoriteUserAPI(FavoriteCallback favoriteCallback) {
         this.favoriteCallback = favoriteCallback;
+        restManager=new RestManager();
     }
 
     public void like(String apiToken, int partnerId) {

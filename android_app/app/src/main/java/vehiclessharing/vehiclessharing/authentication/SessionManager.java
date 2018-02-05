@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import vehiclessharing.vehiclessharing.controller.activity.SigninActivity;
+import vehiclessharing.vehiclessharing.view.activity.SigninActivity;
 
 /**
  * Created by Hihihehe on 9/23/2017.
@@ -14,80 +14,47 @@ import vehiclessharing.vehiclessharing.controller.activity.SigninActivity;
 public class SessionManager {
     SharedPreferences pref;
 
-    // Editor for Shared preferences
     SharedPreferences.Editor editor;
-
-    // Context
     Context _context;
 
-    // Shared pref mode
     int PRIVATE_MODE = 0;
 
-    // Sharedpref file name
     public static final String PREF_NAME_LOGIN = "vsharing_is_login";
 
-    // All Shared Preferences Keys
     public static final String IS_LOGIN = "is_loggedin";
 
-    // User name (make variable public to access from outside)
     public static final String KEY_NAME = "name";
 
-    // Email address (make variable public to access from outside)
     public static final String KEY_SESSION = "session_id";
     public static final String USER_ID="user_id";
 
 
-    // Constructor
     public SessionManager(Context context){
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME_LOGIN, PRIVATE_MODE);
         editor = pref.edit();
     }
     public void createLoginSession(int userId, String session_id){
-        // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
 
-        // Storing name in pref
         editor.putInt(USER_ID, userId);
 
-        // Storing email in pref
         editor.putString(KEY_SESSION, session_id);
-
-        // commit changes
         editor.commit();
-    }
-    public void checkLogin(){
-        // Check login status
-        if(!this.isLoggedIn()){
-            // user is not logged in redirect him to Login Activity
-            Intent i = new Intent(_context, SigninActivity.class);
-            // Closing all the Activities
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-            // Add new Flag to start new Activity
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-            // Staring Login Activity
-            _context.startActivity(i);
-        }
-
     }
 
     public void logoutUser(){
-        // Clearing all data from Shared Preferences
+
         editor.clear();
         editor.commit();
 
-        // After logout redirect user to Loing Activity
-        Intent i = new Intent(_context, SigninActivity.class);
-        // Closing all the Activities
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        // Add new Flag to start new Activity
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent signInIntent = new Intent(_context, SigninActivity.class);
 
-        // Staring Login Activity
-        _context.startActivity(i);
+        signInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        signInIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        _context.startActivity(signInIntent);
     }
     public boolean isLoggedIn(){
         Log.d("isLoggedIn","Sessionid: "+pref.getString(KEY_SESSION,""));

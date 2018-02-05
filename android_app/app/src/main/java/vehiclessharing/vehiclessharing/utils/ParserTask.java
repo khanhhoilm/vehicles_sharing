@@ -64,7 +64,5 @@ public class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<Str
             polyLineOptions.color(Color.BLUE);
         }
 
-      //  mGoogleMap.addPolyline(polyLineOptions);
-
     }
 }

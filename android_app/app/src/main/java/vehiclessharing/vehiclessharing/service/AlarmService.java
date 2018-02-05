@@ -9,7 +9,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import co.vehiclessharing.R;
-import vehiclessharing.vehiclessharing.controller.activity.VehicleMoveActivity;
+import vehiclessharing.vehiclessharing.view.activity.VehicleMoveActivity;
 
 /**
  * Created by Hihihehe on 12/18/2017.

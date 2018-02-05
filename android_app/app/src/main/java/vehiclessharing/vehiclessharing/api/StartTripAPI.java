@@ -11,21 +11,19 @@ import vehiclessharing.vehiclessharing.model.StartStripResponse;
  */
 
 public class StartTripAPI {
-    private static final StartTripAPI ourInstance = new StartTripAPI();
-    private static RestManager restManager;
-    private static StartTripRequestCallback requestCallback;
+    private RestManager restManager;
+    private StartTripRequestCallback requestCallback;
 
-    public static StartTripAPI getInstance(StartTripRequestCallback callback) {
-        requestCallback = callback;
-        restManager = new RestManager();
-        return ourInstance;
+    public StartTripAPI(StartTripRequestCallback requestCallback) {
+        this.requestCallback = requestCallback;
+        restManager=new RestManager();
     }
 
     private StartTripAPI() {
     }
 
-    public void sendNotiStartTripToUserTogether(String apiToken,int partnerId) {
-        restManager.getApiService().startTheTrip(apiToken,partnerId).enqueue(new Callback<StartStripResponse>() {
+    public void sendNotiStartTripToUserTogether(String apiToken,int partnerId,int vehiclesType) {
+        restManager.getApiService().startTheTrip(apiToken,partnerId,vehiclesType).enqueue(new Callback<StartStripResponse>() {
             @Override
             public void onResponse(Call<StartStripResponse> call, Response<StartStripResponse> response) {
                 if (response.isSuccessful() && response.body().getStatus().getError() == 0) {

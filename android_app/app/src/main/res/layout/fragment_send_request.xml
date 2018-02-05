@@ -3,9 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="vehiclessharing.vehiclessharing.controller.fragment.SendRequestFragment">
+    tools:context="vehiclessharing.vehiclessharing.view.fragment.SendRequestFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,14 +44,14 @@
 
         <Button
             android:id="@+id/btnSendrequest"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
             android:text="@string/send_request" />
 
         <Button
             android:id="@+id/btnCancelSend"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
             android:text="@string/cancel" />

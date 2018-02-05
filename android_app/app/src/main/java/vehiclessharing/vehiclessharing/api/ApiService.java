@@ -1,11 +1,17 @@
 package vehiclessharing.vehiclessharing.api;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import vehiclessharing.vehiclessharing.model.History;
+import vehiclessharing.vehiclessharing.model.PathImageUpload;
 import vehiclessharing.vehiclessharing.model.RequestResult;
 import vehiclessharing.vehiclessharing.model.ResultSendRequest;
 import vehiclessharing.vehiclessharing.model.SignInResult;
@@ -18,6 +24,7 @@ public interface ApiService {
 
     // String BASE_URL = "http://vehiclessharing.viecit.co/";
     String BASE_URL = "https://vehicle-sharing.herokuapp.com/";
+    String BASE_URL_UPLOAD_IMAGE="https://upload-file-server.herokuapp.com/";
 
     @POST("users/register")
     @FormUrlEncoded
@@ -38,8 +45,13 @@ public interface ApiService {
     @POST("users/update")
     @FormUrlEncoded
     Call<StatusResponse> updateInfoUser(@Field("api_token") String apiToken, @Field("name") String name, @Field("email") String email,
-                                        @Field("avatar_link") String avatarLink, @Field("password") String password, @Field("gender") int gender,
+                                        @Field("avatar_link") String avatarLink ,@Field("gender") int gender,
                                         @Field("address") String address, @Field("birthday") String birthday);
+
+    @POST("users/update")
+    @FormUrlEncoded
+    Call<StatusResponse> updateAvatar (@Field("api_token") String apiToken,
+                                        @Field("avatar_link") String avatarLink);
 
     @FormUrlEncoded
     @Headers("Accept: application/json")
@@ -69,11 +81,16 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("api/start-the-trip")
-    Call<StartStripResponse> startTheTrip(@Field("api_token") String apiToken,@Field("partner_id") int parnerId);
+    Call<StartStripResponse> startTheTrip(@Field("api_token") String apiToken,@Field("partner_id") int parnerId,@Field("vehicle_type ") int vehicleType);
 
     @FormUrlEncoded
     @POST("api/cancel-the-trip")
     Call<StatusResponse> cancelTrip(@Field("api_token") String apiToken,@Field("vehicle_type") int vehicleType,@Field("comment") String comment);
+
+    @FormUrlEncoded
+    @POST("users/show")
+    Call<UserInfo> getMyInfo(@Field("api_token") String apiToken);
+
 
     @FormUrlEncoded
     @POST("users/show")
@@ -92,6 +109,11 @@ public interface ApiService {
     @POST("users/show-history")
     Call<History> getHistory(@Field("api_token") String apiToken,@Field("user_type") String userType);
 
+    @FormUrlEncoded
+    @POST("users/show-history")
+    Call<History> getHistoryAnotherUser(@Field("api_token") String apiToken,@Field("user_type") String userType,@Field("user_id") int anotherUserId);
+
+
     /*URL: https://vehicle-sharing.herokuapp.com/users/add-to-favorite
 Param:
 - api_token (require)
@@ -99,4 +121,12 @@ Param:
     @FormUrlEncoded
     @POST("users/add-to-favorite")
     Call<StatusResponse> addToFavorite(@Field("api_token") String apiToken,@Field("partner_id") int partnerId);
+
+    @Multipart
+    @POST("upload/")
+    Call<PathImageUpload> postImage(@Part MultipartBody.Part imagex);
+
+    @FormUrlEncoded
+    @POST("api/report")
+    Call<StatusResponse> sendSOS(@Field("api_token")String apiToken,@Field("vehicle_type") int vehicleType, @Field("address") String address,@Field("comment") String comment);
 }

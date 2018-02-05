@@ -18,6 +18,11 @@ public class ReceiveRequest {
                 "start_time": "08:08:00",
                 "vehicle_type": 0,
                 "note": "cdall"*/
+
+    @SerializedName("avatar_link")
+    @Expose
+    private String avartarLink;
+
     @SerializedName("start_location")
     @Expose
     private LatLngLocation startLocation;
@@ -28,14 +33,11 @@ public class ReceiveRequest {
 
     @SerializedName("start_time")
     @Expose
-    private String startTime ;
+    private String startTime;
 
     @SerializedName("end_location")
     @Expose
     private LatLngLocation endLocation;
-
-
-
 
     @SerializedName("user_id")
     @Expose
@@ -54,6 +56,13 @@ public class ReceiveRequest {
     @Expose
     private String userName;
 
+    public String getAvartarLink() {
+        return avartarLink;
+    }
+
+    public void setAvartarLink(String avartarLink) {
+        this.avartarLink = avartarLink;
+    }
 
     public Integer getUserId() {
         return userId;

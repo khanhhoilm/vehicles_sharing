@@ -30,6 +30,9 @@ public class ConfirmRequest {
     @Expose
     private Integer userId;
 
+    @SerializedName("avatar_link")
+    @Expose
+    private String avartarLink;
 
     @SerializedName("type")
     @Expose
@@ -96,4 +99,11 @@ public class ConfirmRequest {
         this.type = type;
     }
 
+    public String getAvartarLink() {
+        return avartarLink;
+    }
+
+    public void setAvartarLink(String avartarLink) {
+        this.avartarLink = avartarLink;
+    }
 }

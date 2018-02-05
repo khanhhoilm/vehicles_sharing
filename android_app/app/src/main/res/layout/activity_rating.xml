@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="vehiclessharing.vehiclessharing.controller.activity.RatingActivity">
+    tools:context="vehiclessharing.vehiclessharing.view.activity.RatingActivity">
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">

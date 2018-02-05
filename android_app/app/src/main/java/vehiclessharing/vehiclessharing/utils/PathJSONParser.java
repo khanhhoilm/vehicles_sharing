@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * Class để parse JsonObject từ google map API lấy các location
- */
 
 public class PathJSONParser {
     public List<List<HashMap<String, String>>> parse(JSONObject jObject) {

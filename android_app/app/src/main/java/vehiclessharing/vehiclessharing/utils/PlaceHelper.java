@@ -11,7 +11,6 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -36,7 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import vehiclessharing.vehiclessharing.controller.activity.MainActivity;
 import vehiclessharing.vehiclessharing.model.LatLngLocation;
 import vehiclessharing.vehiclessharing.permission.CheckerGPS;
 
@@ -61,10 +59,6 @@ public class PlaceHelper {
         return instance = new PlaceHelper(context, activity);
     }
 
-    PlaceHelper() {
-
-    }
-
     PlaceHelper(Context context) {
         mContext = context;
     }
@@ -74,20 +68,21 @@ public class PlaceHelper {
         mActivity = activity;
     }
 
-    public String getCurrentPlace() {
+    public String getCurrentPlace(GoogleMap googleMap) throws Exception {
         String fullAddress = "";
         try {
-            GoogleMap mMap = MainActivity.mGoogleMap;
-
+            GoogleMap mMap = googleMap;
+            CheckerGPS checkerGPS = new CheckerGPS(mContext, mActivity);
             Location myLocation = null;
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
+                if(checkerGPS.checkLocationPermission())
                 myLocation = mMap.getMyLocation();
             } else {
                 LocationManager locationManager = (LocationManager)
                         mContext.getSystemService(Context.LOCATION_SERVICE);
                 Criteria criteria = new Criteria();
 
-                CheckerGPS checkerGPS = new CheckerGPS(mContext, mActivity);
+
                 if (checkerGPS.checkLocationPermission()) {
                     if (locationManager != null) {
                         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) this);
@@ -122,11 +117,11 @@ public class PlaceHelper {
                     Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(mContext, "Unable to fetch the current location", Toast.LENGTH_SHORT).show();
+               Log.d("getCurrentPlace", "Unable to fetch the current location");
             }
         }catch (Exception e)
         {
-            Toast.makeText(mContext, "Cannot get YourLocation", Toast.LENGTH_SHORT).show();
+            Log.d("getCurrentPlace", "Unable to fetch the current location");
         }
         return fullAddress;
     }
@@ -183,13 +178,9 @@ public class PlaceHelper {
               };
         }
 
-      /*  if(fullAddress.equals("")&&!addressReplace[0].equals("")&&addressReplace!=null){
-            fullAddress=addressReplace[0];
-        }
-      */
       return fullAddress;
     }
-    public String getAddressByLatLngLocation(LatLngLocation latLng) throws IOException {
+    public String getAddressByLatLngLocation(LatLngLocation latLng) throws Exception {
         String fullAddress = "";
         geocoder = new Geocoder(mContext);
         try {
@@ -263,7 +254,8 @@ public class PlaceHelper {
         if(android.os.Debug.isDebuggerConnected())
             android.os.Debug.waitForDebugger();
         String address = String
-                .format(Locale.ENGLISH,                                 "http://maps.googleapis.com/maps/api/geocode/json?latlng=%1$f,%2$f&sensor=true&language="
+                .format(Locale.ENGLISH,
+                        "http://maps.googleapis.com/maps/api/geocode/json?latlng=%1$f,%2$f&sensor=true&language="
                         + Locale.getDefault().getCountry(), lat, lng);
         HttpGet httpGet = new HttpGet(address);
         HttpClient client = new DefaultHttpClient();
@@ -366,9 +358,6 @@ public class PlaceHelper {
                         String lat = jsonObject.getString("lat");
                         String lng = jsonObject.getString("lng");
 
-                        // Log.d("MAPSAPI", "latlng " + lat + ", "
-                        // + lng);
-
                         position = new LatLng(Double.valueOf(lat),
                                 Double.valueOf(lng));
                     }
@@ -452,7 +441,4 @@ public class PlaceHelper {
             }
         });
     }*/
-   public interface getAddressCallback{
-       void getAddressSucess(String address);
-   }
 }

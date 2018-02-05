@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import vehiclessharing.vehiclessharing.controller.activity.MainActivity;
+import vehiclessharing.vehiclessharing.view.activity.MainActivity;
 import vehiclessharing.vehiclessharing.model.LatLngLocation;
 import vehiclessharing.vehiclessharing.model.RequestInfo;
 import vehiclessharing.vehiclessharing.model.User;
@@ -56,6 +56,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             ")";
     private static final String CREATE_REQUEST_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_REQUEST + " (" +
             USER_ID + " INTEGER NOT NULL PRIMARY KEY," +
+            THUMB_LINK_COLUMN + " TEXT," +
             SOURCE_LOCATION + " TEXT NOT NULL," +
             DESTINATION_LOCATION + " TEXT NOT NULL," +
             TIME_START + " TEXT," +
@@ -267,6 +268,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 contentValues.put(FULL_NAME_COLUMN, userInfo.getName());
                 //          contentValues.put(PHONE_NUMBER_COLUMN, userInfo.getPhone());
                 contentValues.put(GENDER_COLUMN, userInfo.getGender());
+
+                /*if(userInfo.getAvatarLink()!=null&&!userInfo.getAvatarLink().equals("")){
+                    contentValues.put(THUMB_LINK_COLUMN,userInfo.getAvatarLink());
+                }*/
+
                 if (userInfo.getBirthday() != null && !userInfo.getBirthday().equals("")) {
                     contentValues.put(BIRTHDAY_COLUMN, userInfo.getBirthday());
                 }
@@ -295,9 +301,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             if (isRequestExists(userId)) {
                 deleteRequest(userId);
             }
-                if (!isRequestExists(userId)) {
+            if (!isRequestExists(userId)) {
                 ContentValues values = new ContentValues();
                 values.put(USER_ID, userId);
+                if (requestInfo.getAvatarLink() != null && !requestInfo.getAvatarLink().equals("")) {
+                    values.put(THUMB_LINK_COLUMN, requestInfo.getAvatarLink());
+                }
                 values.put(SOURCE_LOCATION, requestInfo.getSourceLocation().convertLatLngToStringToDatabase());
                 values.put(DESTINATION_LOCATION, requestInfo.getDestLocation().convertLatLngToStringToDatabase());
                 values.put(TIME_START, requestInfo.getTimeStart());
@@ -311,23 +320,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return insertResult;
     }
 
-    public boolean insertRequestNotMe(RequestInfo requestInfo,int userId){
-        boolean rs=false;
+    public boolean insertRequestNotMe(RequestInfo requestInfo, int userId) {
+        boolean rs = false;
         try {
             SQLiteDatabase db = this.getWritableDatabase();
             Cursor cursor = db.rawQuery(GET_REQUEST_INFO_NOT_ME(MainActivity.userId), null);
-            if(cursor.getCount()>0){
+            if (cursor.getCount() > 0) {
                 deleteAllRequestExceptMe(MainActivity.userId);
             }
             if (!isRequestExists(userId)) {
                 ContentValues values = new ContentValues();
                 values.put(USER_ID, userId);
+                if (requestInfo.getAvatarLink() != null && !requestInfo.getAvatarLink().equals("")) {
+                    values.put(THUMB_LINK_COLUMN, requestInfo.getAvatarLink());
+                }
                 values.put(SOURCE_LOCATION, requestInfo.getSourceLocation().convertLatLngToStringToDatabase());
                 values.put(DESTINATION_LOCATION, requestInfo.getDestLocation().convertLatLngToStringToDatabase());
                 values.put(TIME_START, requestInfo.getTimeStart());
                 values.put(VEHICLE_TYPE, requestInfo.getVehicleType());
                 long rowId = db.insert(TABLE_REQUEST, null, values);
-            rs=true;
+                rs = true;
             }
         } catch (Exception e) {
             Log.d(TAG, "DBException");
@@ -364,6 +376,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             if (cursor.getCount() > 0 && cursor.moveToFirst()) {
                 requestInfo.setUserId(cursor.getInt(cursor.getColumnIndex(USER_ID)));
+                if (cursor.getString(cursor.getColumnIndex(THUMB_LINK_COLUMN)) != null) {
+                    requestInfo.setAvatarLink(cursor.getString(cursor.getColumnIndex(THUMB_LINK_COLUMN)));
+                }
                 requestInfo.setSourceLocation(LatLngLocation.convertStringFromDatabaseToLatLng(cursor.getString(cursor.getColumnIndex(SOURCE_LOCATION))));
                 requestInfo.setDestLocation(LatLngLocation.convertStringFromDatabaseToLatLng(cursor.getString(cursor.getColumnIndex(DESTINATION_LOCATION))));
                 requestInfo.setTimeStart(cursor.getString(cursor.getColumnIndex(TIME_START)));
@@ -382,6 +397,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             if (cursor.getCount() > 0 && cursor.moveToFirst()) {
                 requestInfo.setUserId(cursor.getInt(cursor.getColumnIndex(USER_ID)));
+                if (cursor.getString(cursor.getColumnIndex(THUMB_LINK_COLUMN)) != null) {
+                    requestInfo.setAvatarLink(cursor.getString(cursor.getColumnIndex(THUMB_LINK_COLUMN)));
+                }
+
                 requestInfo.setSourceLocation(LatLngLocation.convertStringFromDatabaseToLatLng(cursor.getString(cursor.getColumnIndex(SOURCE_LOCATION))));
                 requestInfo.setDestLocation(LatLngLocation.convertStringFromDatabaseToLatLng(cursor.getString(cursor.getColumnIndex(DESTINATION_LOCATION))));
                 requestInfo.setTimeStart(cursor.getString(cursor.getColumnIndex(TIME_START)));
@@ -408,6 +427,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return result;
     }
+
     public boolean deleteAllRequestExceptMe(int userId) {
         boolean result = false;
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
@@ -417,6 +437,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 sqLiteDatabase.execSQL(query);
                 result = true;
             }
+        } catch (Exception e) {
+
+        }
+        return result;
+    }
+
+    public boolean deleteAllRequest() {
+        boolean result = false;
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
+        String query = "DELETE FROM " + TABLE_REQUEST;
+        sqLiteDatabase.execSQL(query);
+        result = true;
+
+        return result;
+    }
+
+    public boolean deleteAll() {
+        boolean result = false;
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        try {
+            String query = "DELETE FROM " + TABLE_REQUEST;
+            sqLiteDatabase.execSQL(query);
+            query = "DELETE FROM " + TABLE_USER;
+            sqLiteDatabase.execSQL(query);
+            result = true;
         } catch (Exception e) {
 
         }

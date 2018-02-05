@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.location.LocationManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.directions.route.Route;
 import com.directions.route.RouteException;
@@ -16,7 +17,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 
-import vehiclessharing.vehiclessharing.controller.activity.MainActivity;
+import vehiclessharing.vehiclessharing.view.activity.MainActivity;
 import vehiclessharing.vehiclessharing.permission.CheckInternetAndLocation;
 
 import static android.content.Context.LOCATION_SERVICE;
@@ -57,7 +58,6 @@ public class DrawRoute implements RoutingListener {
     public void drawroadBetween2Location(LatLng latLng1, LatLng latLng2, int subject) {
         mSubject = subject;
         LocationManager lm = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
-      //  CheckInternetAndLocation check = new CheckInternetAndLocation(mContext);
         if (!CheckInternetAndLocation.isOnline(mContext) || !MainActivity.checkerGPS.checkLocationPermission() ||
                 !lm.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
                 !lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
@@ -136,6 +136,7 @@ public class DrawRoute implements RoutingListener {
 
     @Override
     public void onRoutingFailure(RouteException e) {
+        Toast.makeText(mContext, "Có lỗi xảy ra vẽ đường đi thất bại", Toast.LENGTH_SHORT).show();
         Log.d("Error", "onRoutingFailure");
 
     }

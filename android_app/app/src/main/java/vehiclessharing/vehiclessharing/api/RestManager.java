@@ -16,10 +16,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RestManager {
 
-    private static ApiService apiService;
+    private ApiService apiService;
 
 
-    public static ApiService getApiService() {
+    public ApiService getApiService() {
         Gson gson = new GsonBuilder().create();
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
                 .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)

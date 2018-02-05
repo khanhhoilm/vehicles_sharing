@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    tools:context="vehiclessharing.vehiclessharing.controller.activity.ConfirmRequestActivity">
+    tools:context="vehiclessharing.vehiclessharing.view.activity.ConfirmRequestActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,8 +26,8 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imgAvatar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:src="@drawable/temp" />
 
             <LinearLayout
@@ -85,6 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
+                android:visibility="visible"
                 android:text="@string/accept" />
 
             <Button
@@ -92,6 +93,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
+                android:visibility="visible"
                 android:text="@string/deny" />
 
             <Button
