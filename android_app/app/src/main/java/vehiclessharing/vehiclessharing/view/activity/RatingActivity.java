@@ -22,7 +22,7 @@ import vehiclessharing.vehiclessharing.api.RatingUserTogetherAPI;
 import vehiclessharing.vehiclessharing.database.DatabaseHelper;
 import vehiclessharing.vehiclessharing.model.InfomationUser;
 import vehiclessharing.vehiclessharing.model.RequestInfo;
-import vehiclessharing.vehiclessharing.permission.CheckInternetAndLocation;
+import vehiclessharing.vehiclessharing.permission.isNetworkAvailable;
 import vehiclessharing.vehiclessharing.utils.PlaceHelper;
 
 public class RatingActivity extends AppCompatActivity implements View.OnClickListener, View.OnFocusChangeListener,
@@ -128,7 +128,7 @@ public class RatingActivity extends AppCompatActivity implements View.OnClickLis
         int id = v.getId();
         switch (id) {
             case R.id.btnSendRating:
-                if (CheckInternetAndLocation.isOnline(this)) {
+                if (isNetworkAvailable.isOnline(this)) {
 
                     if (journeyId != 0) {
                         btnSend.setEnabled(false);

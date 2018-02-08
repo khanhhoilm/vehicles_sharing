@@ -25,11 +25,6 @@ import com.google.android.gms.maps.model.LatLng;
 
 import vehiclessharing.vehiclessharing.constant.Utils;
 
-
-/**
- * Created by Tuan on 22/04/2017.
- */
-
 public class TrackGPSService extends Service implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
     private static GoogleApiClient mGoogleApiClient;
     private static LocationRequest mLocationRequest;

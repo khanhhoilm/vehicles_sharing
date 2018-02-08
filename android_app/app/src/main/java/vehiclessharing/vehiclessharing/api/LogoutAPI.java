@@ -13,10 +13,6 @@ import vehiclessharing.vehiclessharing.api.RestManager;
 import vehiclessharing.vehiclessharing.authentication.SessionManager;
 import vehiclessharing.vehiclessharing.model.StatusResponse;
 
-/**
- * Created by Hihihehe on 11/7/2017.
- */
-
 public class LogoutAPI {
     private RestManager apiLogout;
     private boolean isLogout = false;

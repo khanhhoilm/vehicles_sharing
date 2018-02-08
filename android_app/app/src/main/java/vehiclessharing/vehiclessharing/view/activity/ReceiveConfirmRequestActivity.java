@@ -73,8 +73,7 @@ public class ReceiveConfirmRequestActivity extends AppCompatActivity implements 
             if (confirmRequest.getAvartarLink()!=null&&!confirmRequest.getAvartarLink().equals("")){
                 Glide.with(this).load(confirmRequest.getAvartarLink()).placeholder(getResources().getDrawable(R.drawable.temp)).into(imgAvatar);
             }
-            // databaseHelper.insertRequest(confirmRequest,confirmRequest.getUserId())
-        } catch (Exception e) {
+      } catch (Exception e) {
             e.printStackTrace();
         }
     }

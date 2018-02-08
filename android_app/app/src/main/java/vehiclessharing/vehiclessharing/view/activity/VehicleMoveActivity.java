@@ -51,7 +51,7 @@ import vehiclessharing.vehiclessharing.model.InfomationUser;
 import vehiclessharing.vehiclessharing.model.JourneyInfo;
 import vehiclessharing.vehiclessharing.model.RequestInfo;
 import vehiclessharing.vehiclessharing.permission.CallPermission;
-import vehiclessharing.vehiclessharing.permission.CheckInternetAndLocation;
+import vehiclessharing.vehiclessharing.permission.isNetworkAvailable;
 import vehiclessharing.vehiclessharing.permission.CheckerGPS;
 import vehiclessharing.vehiclessharing.push.CustomFirebaseMessagingService;
 import vehiclessharing.vehiclessharing.service.AlarmReceiver;
@@ -507,7 +507,7 @@ public class VehicleMoveActivity extends AppCompatActivity implements OnMapReady
     }
 
     public void endTrip() {
-        if (CheckInternetAndLocation.isOnline(this)) {
+        if (isNetworkAvailable.isOnline(this)) {
 
             Log.d("journeyId", "endTrip" + String.valueOf(journeyId));
             if (journeyId != 0) {

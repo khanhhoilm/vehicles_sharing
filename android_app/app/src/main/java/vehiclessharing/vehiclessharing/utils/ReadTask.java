@@ -4,11 +4,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 /**
- * Created by Tuan on 10/04/2017.
- */
-
-
-/**
  * Fetches data from url passed
  */
 public class ReadTask extends AsyncTask<String, Void, String> {

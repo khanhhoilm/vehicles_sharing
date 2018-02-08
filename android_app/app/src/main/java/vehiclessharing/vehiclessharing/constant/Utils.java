@@ -1,14 +1,5 @@
 package vehiclessharing.vehiclessharing.constant;
 
-/*import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-
-import static com.facebook.FacebookSdk.getApplicationContext;*/
-
-/**
- * Created by Tuan on 07/03/2017.
- */
-
 public class Utils {
     //Email Validation pattern
     public static final String regEx = "\\b[A-Za-z0-9]+@[A-Za-z]+\\.[A-Za-z]{2,4}\\b";

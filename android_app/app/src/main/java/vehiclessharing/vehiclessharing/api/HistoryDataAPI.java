@@ -8,10 +8,6 @@ import retrofit2.Response;
 import vehiclessharing.vehiclessharing.model.History;
 import vehiclessharing.vehiclessharing.model.UserHistoryInfo;
 
-/**
- * Created by Hihihehe on 12/13/2017.
- */
-
 public class HistoryDataAPI {
     private HistoryDriverCallback historyDriverCallback;
     private HistoryHikerCallback historyHikerCallback;

@@ -95,7 +95,7 @@ public class HistoryItemAdapter extends
         try {
             if (viewHolder instanceof CardViewHolder && !isAnotherUser) {
                 CardViewHolder holder = (CardViewHolder) viewHolder;
-                // String avartarLink = ;
+
                 if (journeyDone.getJourney().getPartner().getAvatarLink() != null && !journeyDone.getJourney().getPartner().getAvatarLink().equals("")) {
                     Glide.with(mContext).load(journeyDone.getJourney().getPartner().getAvatarLink()).placeholder(mContext.getResources().getDrawable(R.drawable.temp)).into(holder.imgAvatar);
                 }
@@ -109,7 +109,6 @@ public class HistoryItemAdapter extends
                 holder.txtSourceAddress.setText(PlaceHelper.getInstance(mContext).getAddressByLatLngLocation(journeyDone.getJourney().getStartLocation()));
                 holder.txtDesAddress.setText(PlaceHelper.getInstance(mContext).getAddressByLatLngLocation(journeyDone.getJourney().getEndLocation()));
 
-                //   if ()
                 float ratingValue = 0;
                 int myRating = 0;
                 int anotherRating = 0;
@@ -123,13 +122,10 @@ public class HistoryItemAdapter extends
                 holder.averageRatingBar.setRating(ratingValue);
             } else {
                 AnotherUserHistoryHolder holder = (AnotherUserHistoryHolder) viewHolder;
-                //  String avartarLink = ;
                 if (journeyDone.getJourney().getPartner().getAvatarLink() != null && !journeyDone.getJourney().getPartner().getAvatarLink().equals("")) {
                     Glide.with(mContext).load(journeyDone.getJourney().getPartner().getAvatarLink()).placeholder(mContext.getResources().getDrawable(R.drawable.temp)).into(holder.imgAvatar);
                 }
                 holder.txtUserName.setText(journeyDone.getJourney().getPartner().getName());
-
-               // holder.txtStartAndFinishTime.setText(journeyDone.getJourney().getStartTime().getDate() + " - " + journeyDone.getJourney().getFinishTime());
 
                 String timeStart="";
                 timeStart=ChangeDateTimeGMT.convertToDate(journeyDone.getJourney().getStartTime().getDate());
@@ -138,16 +134,12 @@ public class HistoryItemAdapter extends
 
                 holder.txtSourceAddress.setText(PlaceHelper.getInstance(mContext).getAddressByLatLngLocation(journeyDone.getJourney().getStartLocation()));
                 holder.txtDesAddress.setText(PlaceHelper.getInstance(mContext).getAddressByLatLngLocation(journeyDone.getJourney().getEndLocation()));
-                float ratingValue = 0;
-                int myRating = 0;
                 int anotherRating = 0;
 
                 if (journeyDone.getJourney().getPartnerRating() != null) {
                     anotherRating = journeyDone.getJourney().getPartnerRating().getRatingValue();
                 }
                 holder.averageRatingBar.setRating(anotherRating);
-
-                //holder.averageRatingBar.setRating(Float.parseFloat(String.valueOf(journeyDone.getJourney().getRatingValue())));
 
                 if (journeyDone.getJourney().getPartnerRating() != null) {
                     holder.txtComment.setText(journeyDone.getJourney().getPartnerRating().getComment());
@@ -212,7 +204,6 @@ public class HistoryItemAdapter extends
                     }
                     lnButtonRating.setScaleX(0.7f);
                     lnButtonRating.setScaleY(0.7f);
-                    //txtComment
                     break;
                 case R.id.btnYourRating:
 

@@ -113,11 +113,6 @@ public interface ApiService {
     @POST("users/show-history")
     Call<History> getHistoryAnotherUser(@Field("api_token") String apiToken,@Field("user_type") String userType,@Field("user_id") int anotherUserId);
 
-
-    /*URL: https://vehicle-sharing.herokuapp.com/users/add-to-favorite
-Param:
-- api_token (require)
-- partner_id*/
     @FormUrlEncoded
     @POST("users/add-to-favorite")
     Call<StatusResponse> addToFavorite(@Field("api_token") String apiToken,@Field("partner_id") int partnerId);

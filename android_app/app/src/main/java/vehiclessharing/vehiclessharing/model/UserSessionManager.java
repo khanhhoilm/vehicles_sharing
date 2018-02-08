@@ -13,19 +13,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import co.vehiclessharing.R;
 
-
-/**
- * Created by Tuan on 20/03/2017.
- */
-
 public class UserSessionManager implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
-    //Context
     private Context context;
 
-    // Google plus Client
     static public GoogleApiClient mGoogleApiClient;
 
-    // Constructor
     public UserSessionManager(Context context){
         this.context = context;
 

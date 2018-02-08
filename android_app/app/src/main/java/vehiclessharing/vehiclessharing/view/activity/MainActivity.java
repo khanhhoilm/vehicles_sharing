@@ -176,7 +176,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         addEvents();
         setScreen();
 
-       // Log.d("debug Address","debug AddressD"+DebugDB.getAddressLog());
     }
 
     private void setScreen() {
@@ -1120,11 +1119,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void getBitMapSuccess(Bitmap bitmap) {
-        try{
             if(bitmap!=null && !bitmap.equals(""))
             imgUser.setImageBitmap(bitmap);
-        }catch (Exception e){
-
-        }
     }
 }

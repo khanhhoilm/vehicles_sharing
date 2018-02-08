@@ -18,7 +18,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
 
 import vehiclessharing.vehiclessharing.view.activity.MainActivity;
-import vehiclessharing.vehiclessharing.permission.CheckInternetAndLocation;
+import vehiclessharing.vehiclessharing.permission.isNetworkAvailable;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -58,7 +58,7 @@ public class DrawRoute implements RoutingListener {
     public void drawroadBetween2Location(LatLng latLng1, LatLng latLng2, int subject) {
         mSubject = subject;
         LocationManager lm = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
-        if (!CheckInternetAndLocation.isOnline(mContext) || !MainActivity.checkerGPS.checkLocationPermission() ||
+        if (!isNetworkAvailable.isOnline(mContext) || !MainActivity.checkerGPS.checkLocationPermission() ||
                 !lm.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
                 !lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
         }
@@ -75,7 +75,7 @@ public class DrawRoute implements RoutingListener {
         mSubject = subject;
         LocationManager lm = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
        // CheckInternetAndLocation check = new CheckInternetAndLocation(mContext);
-        if (!CheckInternetAndLocation.isOnline(mContext) || !MainActivity.checkerGPS.checkLocationPermission() ||
+        if (!isNetworkAvailable.isOnline(mContext) || !MainActivity.checkerGPS.checkLocationPermission() ||
                 !lm.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
                 !lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
         }
@@ -120,13 +120,9 @@ public class DrawRoute implements RoutingListener {
 
                 polyline = mGoogleMap.addPolyline(polyOptions);
                 polyline.setTag(mSubject);
-                //if (mSubject != 0) {
+
                 MainActivity.polylineList.add(mSubject, polyline);
 
-                // Store a data object with the polyline, used here to indicate an arbitrary typ
-                // polyline.setTag();
-                //}
-                // Toast.makeText(getApplicationContext(), "Route " + (i + 1) + ": distance - " + arrayList.get(i).getDistanceValue() + ": duration - " + arrayList.get(i).getDurationValue(), Toast.LENGTH_SHORT).show();
             }
 
         } catch (Exception e) {

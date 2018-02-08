@@ -14,6 +14,7 @@ public class CallPermission {
     public final static int REQUEST_CALL_PHONE = 1;
 
     public static boolean checkCall(Context mContext, Activity mActivity) {
+        boolean rsCheck=false;
         int checkPermissionCallPhone = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CALL_PHONE);
 
         if (checkPermissionCallPhone != PackageManager.PERMISSION_GRANTED) {
@@ -23,13 +24,14 @@ public class CallPermission {
                     new String[]{Manifest.permission.CALL_PHONE},
                     REQUEST_CALL_PHONE);
 
-            return false;
         } else {
-            return true;
+            rsCheck= true;
         }
+        return rsCheck;
     }
 
     public static boolean checkCallSinch(Context mContext, Activity mActivity) {
+        boolean rsCheck=true;
         int checkPermissionCallPhone = ActivityCompat.checkSelfPermission(mContext, Manifest.permission_group.PHONE);
         if (checkPermissionCallPhone != PackageManager.PERMISSION_GRANTED) {
 
@@ -37,8 +39,7 @@ public class CallPermission {
                     mActivity,
                     new String[]{Manifest.permission_group.PHONE},
                     REQUEST_CALL_PHONE);
-
-            return false;
+            rsCheck=false;
         } else {
             checkPermissionCallPhone = ActivityCompat.checkSelfPermission(mContext, Manifest.permission_group.CONTACTS);
             if (checkPermissionCallPhone != PackageManager.PERMISSION_GRANTED) {
@@ -46,8 +47,7 @@ public class CallPermission {
                         mActivity,
                         new String[]{Manifest.permission_group.CONTACTS},
                         REQUEST_CALL_PHONE);
-
-                return false;
+                rsCheck=false;
             } else {
                 checkPermissionCallPhone = ActivityCompat.checkSelfPermission(mContext, Manifest.permission_group.MICROPHONE);
                 if (checkPermissionCallPhone != PackageManager.PERMISSION_GRANTED) {
@@ -55,11 +55,10 @@ public class CallPermission {
                             mActivity,
                             new String[]{Manifest.permission_group.MICROPHONE},
                             REQUEST_CALL_PHONE);
-
-                    return false;
+                    rsCheck=false;
                 }
             }
-            return true;
         }
+        return rsCheck;
     }
 }

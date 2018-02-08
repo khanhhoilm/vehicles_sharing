@@ -5,10 +5,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vehiclessharing.vehiclessharing.model.StatusResponse;
 
-/**
- * Created by Hihihehe on 12/5/2017.
- */
-
 public class RatingUserTogetherAPI {
     private RestManager restManager;
     private RatingCallback ratingCallback;
@@ -25,13 +21,13 @@ public class RatingUserTogetherAPI {
                 if (response.isSuccessful() && response.body().getStatus().getError() == 0) {
                     ratingCallback.ratingSuccess();
                 } else {
-                    ratingCallback.ratingFailure("Response unsucessful status error code = ");
+                    ratingCallback.ratingFailure("Response unsucessful ");
                 }
             }
 
             @Override
             public void onFailure(Call<StatusResponse> call, Throwable t) {
-                ratingCallback.ratingFailure("onFailure ");
+                ratingCallback.ratingFailure("onFailure");
             }
         });
     }

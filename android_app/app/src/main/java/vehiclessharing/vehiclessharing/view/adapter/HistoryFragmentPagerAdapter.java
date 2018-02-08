@@ -43,12 +43,14 @@ public class HistoryFragmentPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         Fragment fragment = null;
         if (anotherUserId == 0) {
+            //use in my histoy
             if (position == 0) {
                 fragment = HistoryDriverFragment.newInstance(position);
             } else {
                 fragment = HistoryHikerFragment.newInstance(position);
             }
         } else {
+            //use in another user history
             if (position == 0) {
                 fragment = HistoryDriverFragment.newInstance(position, anotherUserId);
             } else {

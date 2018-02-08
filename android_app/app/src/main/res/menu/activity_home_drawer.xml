@@ -13,7 +13,7 @@
             android:icon="@drawable/ic_history_blue_grey_600_24dp"
             android:title="@string/nav_history" />
         <!--<item
-            android:id="@+id/nav_about"
+            android:id="@+id/nav_help"
             android:icon="@drawable/ic_contacts_blue_grey_600_24dp"
             android:title="@string/nav_help" />
         -->

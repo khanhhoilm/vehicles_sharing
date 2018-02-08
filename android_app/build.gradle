@@ -7,8 +7,6 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individusal module build.gradle files
         classpath 'com.google.gms:google-services:3.0.0'
         classpath "io.realm:realm-gradle-plugin:3.1.4"//Realm Database
         classpath 'com.amitshekhar.android:debug-db:1.0.2'
@@ -19,12 +17,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
- /*       maven {//View  Realm datase
-           //url 'https://github.com/uPhyca/stetho-realm/raw/master/maven-repo'
-           url "https://maven.google.com"
-        }
-        mavenCentral()
- */
+
         google()
     }
 }

@@ -7,11 +7,6 @@ import android.util.Log;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
-/**
- * Created by Hihihehe on 11/6/2017.
- */
-
-
 public class CustomFirebaseInstanceIDService extends FirebaseInstanceIdService {
     private static final String TAG = CustomFirebaseInstanceIDService.class.getSimpleName();
     public static String DEVICE_TOKEN_REFRESH = "device_token_refresh";
@@ -26,6 +21,7 @@ public class CustomFirebaseInstanceIDService extends FirebaseInstanceIdService {
         SharedPreferences.Editor editor = deviceTokenShare.edit();
         editor.putString(DEVICE_TOKEN, refreshedToken);
         editor.commit();
+        //wait api build api refresh token fcm
         //  sendTheRegisteredTokenToWebServer(refreshedToken);
     }
 }

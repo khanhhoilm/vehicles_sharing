@@ -96,15 +96,15 @@ public class SigninActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onBackPressed() {
 
-        Fragment SignUp_Fragment = fragmentManager
+        Fragment signUpFragment = fragmentManager
                 .findFragmentByTag(Utils.SignUp_Fragment);
-        Fragment ForgotPassword_Fragment = fragmentManager
+        Fragment forgetPasswordFragment = fragmentManager
                 .findFragmentByTag(Utils.ForgotPassword_Fragment);
 
         finishAffinity();
-        if (SignUp_Fragment != null)
+        if (signUpFragment != null)
             replaceLoginFragment();
-        else if (ForgotPassword_Fragment != null)
+        else if (forgetPasswordFragment != null)
             replaceLoginFragment();
         else
             super.onBackPressed();

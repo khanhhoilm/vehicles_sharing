@@ -8,16 +8,6 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class Partner {
-    /*"id": 21,
-                                    "phone": "01677735016",
-                                    "name": "Hội Khánh 016",
-                                    "email": null,
-                                    "google_id": null,
-                                    "facebook_id": null,
-                                    "avatar_link": null,
-                                    "gender": 1,
-                                    "address": null,
-                                    "birthday": null*/
     @SerializedName("id")
     @Expose
     private Integer id;

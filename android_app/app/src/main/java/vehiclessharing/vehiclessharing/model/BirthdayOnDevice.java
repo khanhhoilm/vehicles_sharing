@@ -2,10 +2,6 @@ package vehiclessharing.vehiclessharing.model;
 
 import io.realm.RealmObject;
 
-/**
- * Created by Tuan on 09/05/2017.
- */
-
 public class BirthdayOnDevice extends RealmObject {
     int day;
     int month;

@@ -5,10 +5,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vehiclessharing.vehiclessharing.model.StatusResponse;
 
-/**
- * Created by Hihihehe on 12/11/2017.
- */
-
 public class EndTheTripAPI {
     private EndTheTripAPI ourInstance = null;
     private RestManager restManager;

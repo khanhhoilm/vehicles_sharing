@@ -1,9 +1,5 @@
 package vehiclessharing.vehiclessharing.push;
 
-/**
- * Created by Hihihehe on 11/6/2017.
- */
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;

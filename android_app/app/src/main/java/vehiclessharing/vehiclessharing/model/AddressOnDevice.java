@@ -2,10 +2,7 @@ package vehiclessharing.vehiclessharing.model;
 
 import io.realm.RealmObject;
 
-/**
- * Created by Tuan on 09/05/2017.
- */
-
+//now not use this. but
 public class AddressOnDevice extends RealmObject {
     private String country;//user's country
     private String district;//user's district

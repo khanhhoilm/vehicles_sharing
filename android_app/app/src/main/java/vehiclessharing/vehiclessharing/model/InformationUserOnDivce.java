@@ -2,10 +2,6 @@ package vehiclessharing.vehiclessharing.model;
 
 import io.realm.RealmObject;
 
-/**
- * Created by Tuan on 09/05/2017.
- */
-
 public class InformationUserOnDivce extends RealmObject {
     private String email;
     private String image;

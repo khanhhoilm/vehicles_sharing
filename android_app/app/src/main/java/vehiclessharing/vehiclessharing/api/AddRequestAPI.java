@@ -1,16 +1,10 @@
 package vehiclessharing.vehiclessharing.api;
 
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import vehiclessharing.vehiclessharing.model.RequestResult;
-
-/**
- * Created by Hihihehe on 2/5/2018.
- */
 
 public class AddRequestAPI {
     private RestManager restManager;

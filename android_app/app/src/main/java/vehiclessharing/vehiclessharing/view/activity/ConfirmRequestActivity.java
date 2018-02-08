@@ -22,7 +22,7 @@ import vehiclessharing.vehiclessharing.authentication.SessionManager;
 import vehiclessharing.vehiclessharing.database.DatabaseHelper;
 import vehiclessharing.vehiclessharing.model.ReceiveRequest;
 import vehiclessharing.vehiclessharing.model.RequestInfo;
-import vehiclessharing.vehiclessharing.permission.CheckInternetAndLocation;
+import vehiclessharing.vehiclessharing.permission.isNetworkAvailable;
 import vehiclessharing.vehiclessharing.push.CustomFirebaseMessagingService;
 import vehiclessharing.vehiclessharing.utils.Helper;
 import vehiclessharing.vehiclessharing.utils.PlaceHelper;
@@ -133,7 +133,7 @@ public class ConfirmRequestActivity extends AppCompatActivity implements View.On
 
         switch (v.getId()) {
             case R.id.btnAccept:
-                if (CheckInternetAndLocation.isOnline(this)) {
+                if (isNetworkAvailable.isOnline(this)) {
                     progressBar.setVisibility(View.VISIBLE);
                     btnAccept.setEnabled(false);
                     btnDeny.setEnabled(false);
@@ -141,7 +141,7 @@ public class ConfirmRequestActivity extends AppCompatActivity implements View.On
                 }
                 break;
             case R.id.btnDeny:
-                if (CheckInternetAndLocation.isOnline(this)) {
+                if (isNetworkAvailable.isOnline(this)) {
                     progressBar.setVisibility(View.VISIBLE);
                     btnDeny.setEnabled(false);
                     btnDeny.setEnabled(false);

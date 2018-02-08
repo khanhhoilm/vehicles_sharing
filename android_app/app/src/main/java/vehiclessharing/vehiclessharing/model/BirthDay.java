@@ -1,9 +1,4 @@
 package vehiclessharing.vehiclessharing.model;
-
-/**
- * Created by Tuan on 26/04/2017.
- */
-
 /**
  * birhtday's user
  */

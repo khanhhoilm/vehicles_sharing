@@ -5,10 +5,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vehiclessharing.vehiclessharing.model.StatusResponse;
 
-/**
- * Created by Hihihehe on 11/22/2017.
- */
-
 public class ConfirmRequestAPI {
     private RestManager restManager;
     private ConfirmRequestCallback confirmRequestCallback;

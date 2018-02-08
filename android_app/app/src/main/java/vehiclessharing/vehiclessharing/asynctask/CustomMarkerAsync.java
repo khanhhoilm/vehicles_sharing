@@ -42,7 +42,6 @@ import vehiclessharing.vehiclessharing.model.ActiveUser;
  * Created by Hihihehe on 6/5/2017.
  */
 
-
 public class CustomMarkerAsync extends AsyncTask<ActiveUser, Void, Bitmap> {
     private Activity mActivity;
     private GoogleMap googleMap;
@@ -86,7 +85,6 @@ public class CustomMarkerAsync extends AsyncTask<ActiveUser, Void, Bitmap> {
         //object of user need add marker graber or needer
 
         if (activeUser != null && activeUser.getRequestInfo() != null && activeUser.getUserInfo() != null) {
-            try {
                 bitmap1 = getCustomMarkerView(bitmap,activeUser.getUserInfo().getAvatarLink(), activeUser.getRequestInfo().getVehicleType(), activeUser.getUserInfo().getIsFavorite());
                 source = new LatLng(Double.parseDouble(activeUser.getRequestInfo().getSourceLocation().getLat()), Double.parseDouble(activeUser.getRequestInfo().getSourceLocation().getLng()));
                 customMarker = googleMap.addMarker(new MarkerOptions().position(source).title(activeUser.getUserInfo().getName())
@@ -95,9 +93,6 @@ public class CustomMarkerAsync extends AsyncTask<ActiveUser, Void, Bitmap> {
                 MainActivity.markerHashMap.put(activeUser, customMarker);
                 MainActivity.userHashMap.put(customMarker, activeUser);
                 MainActivity.numberMarkerInHashMap.put(positionInList, customMarker);
-            } catch (Exception e) {
-
-            }
         }
 
     }

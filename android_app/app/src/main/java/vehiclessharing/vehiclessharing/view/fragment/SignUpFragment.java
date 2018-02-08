@@ -72,13 +72,11 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Si
         txtFullName = (EditText) view.findViewById(R.id.txtFullName);
         rdMale = (RadioButton) view.findViewById(R.id.rdMale);
         rdFemale = (RadioButton) view.findViewById(R.id.rdFemale);
-        //    txtEmail = (EditText) view.findViewById(R.id.txtEmail);
         txtPhone = (EditText) view.findViewById(R.id.txtPhone);
         txtPassword = (EditText) view.findViewById(R.id.txtPassword);
         txtConfirmPassword = (EditText) view.findViewById(R.id.txtConfirmPassword);
         btnSignup = (Button) view.findViewById(R.id.btnSignup);
         login = (TextView) view.findViewById(R.id.already_user);
-        //terms_conditions = (CheckBox) view.findViewById(R.id.terms_conditions);
         mDrawable = getResources().getDrawable(R.drawable.ic_warning_red_600_24dp);
         mDrawable.setBounds(0, 0, mDrawable.getIntrinsicWidth(), mDrawable.getIntrinsicHeight());
     }

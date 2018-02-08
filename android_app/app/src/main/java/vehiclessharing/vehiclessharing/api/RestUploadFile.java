@@ -16,10 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class RestUploadFile {
-
-
         private ApiService apiService;
-
 
         public ApiService getApiService() {
             Gson gson = new GsonBuilder().create();

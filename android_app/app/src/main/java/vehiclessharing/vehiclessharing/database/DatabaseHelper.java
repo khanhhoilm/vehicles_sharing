@@ -208,13 +208,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
             long rowId = db.insert(TABLE_USER, null, values);
             insertResult = true;
-            //      this.close();
-            //      db.close();
         } catch (Exception e) {
             Log.d(TAG, "DBException");
-            //insertResult=false;
         }
-        //success
         return insertResult;
     }
 
@@ -246,14 +242,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 if (cursor.getBlob(cursor.getColumnIndex(THUMB_BLOB_COLUMN)) != null) {
                     user.setPicture(Helper.getBitmapFromByte(cursor.getBlob(cursor.getColumnIndex(THUMB_BLOB_COLUMN))));
                 }
-                // user = new UserInfo(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), null, null);
-                //Get Addresscursor.close();
             }
         } catch (Exception e) {
             Log.d("Exception", "DB error");
         }
-        // this.close();
-        //    db.close();
         return user;
     }
 

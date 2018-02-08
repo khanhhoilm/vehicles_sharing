@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 public class CheckCamera {
     public static int REQUEST_CAMERA=30;
     public static boolean checkCamera(Context mContext, Activity mActivity) {
+        boolean  rsCheck=false;
         int checkPermissionCallPhone = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA);
 
         if (checkPermissionCallPhone != PackageManager.PERMISSION_GRANTED) {
@@ -21,11 +22,9 @@ public class CheckCamera {
                     mActivity,
                     new String[]{Manifest.permission.CAMERA},
                     REQUEST_CAMERA);
-
-            return false;
         } else {
-            return true;
+            rsCheck = true;
         }
+        return rsCheck;
     }
-
 }

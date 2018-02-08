@@ -44,10 +44,8 @@ public class SessionManager {
     }
 
     public void logoutUser(){
-
         editor.clear();
         editor.commit();
-
 
         Intent signInIntent = new Intent(_context, SigninActivity.class);
 

@@ -9,11 +9,6 @@ import java.util.regex.Pattern;
 
 import vehiclessharing.vehiclessharing.constant.Utils;
 
-
-/**
- * Created by Tuan on 02/04/2017.
- */
-
 public class Validation {
     private Boolean isValid;
     private String messageValid;

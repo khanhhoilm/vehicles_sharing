@@ -11,11 +11,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-/**
- * Created by Tuan on 10/04/2017.
- */
-
 /**
  * Get List location in background and draw them in google map
  */

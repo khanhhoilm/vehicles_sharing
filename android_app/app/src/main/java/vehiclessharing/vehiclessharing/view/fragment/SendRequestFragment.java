@@ -145,10 +145,6 @@ public class SendRequestFragment extends DialogFragment implements View.OnClickL
 
     @Override
     public void sendRequestFailure() {
-       /* Toast.makeText(mActivity, "Send failed", Toast.LENGTH_SHORT).show();
-        if (isAdded()) {
-            dismiss();
-        }*/
         Toast.makeText(mActivity, mActivity.getString(R.string.no_internet), Toast.LENGTH_SHORT).show();
     }
 
